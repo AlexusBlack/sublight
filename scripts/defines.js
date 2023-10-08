@@ -1,0 +1,1 @@
+const CONF_DISTANCE_MULT = 25;

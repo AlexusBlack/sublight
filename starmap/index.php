@@ -9,20 +9,21 @@ $stars = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/stars.json'
     <div class="starmap__object starmap__star" style="--x: <?php echo $star['x'] * 10 ?>; --y: <?php echo $star['y'] * 10 ?>;" data-star-type="<?php echo $star['type'] ?>" data-type="star" data-name="<?php echo $star['name'] ?>" data-x="<?php echo $star['x'] * 10 ?>" data-y="<?php echo $star['y'] * 10 ?>">
         <div class="starmap__star-body"></div>
         <label class="starmap__star-name"><?php echo $star['name'] ?></label>
+        <div class="starmap__spaceships"></div>
       </div>
     <?php endforeach; ?>
     <div class="starmap__object starmap__star starmap__star--settled" style="--x: 6; --y: 6;" id="target" data-type="star" data-year="1977" data-star-type="1" data-population="4200" data-name="Sol" data-x="6" data-y="6">
       <div class="starmap__star-body"></div>
       <label class="starmap__star-name">Sol</label>
       <div class="starmap__spaceships">
-        <div class="starmap__object starmap__spaceship starmap__spaceship--in-system starmap__spaceship--player" data-type="spaceship" data-population="0.01" data-name="Orion IV">
+        <?php /*<div class="starmap__object starmap__spaceship starmap__spaceship--in-system starmap__spaceship--player" data-type="spaceship" data-population="0.01" data-name="Orion IV">
           <div class="starmap__spaceship-body"></div>
           <label class="starmap__spaceship-name">Orion IV</label>
         </div>
         <div class="starmap__object starmap__spaceship starmap__spaceship--in-system starmap__spaceship--projected" data-type="spaceship" style="--x: 6.1; --y: 6.1;" data-info-year="1977" data-population="0.01" data-name="Korolev II">
           <div class="starmap__spaceship-body"></div>
           <label class="starmap__spaceship-name">Korolev II</label>
-        </div>
+        </div>*/ ?>
       </div>
     </div>
 
@@ -30,7 +31,7 @@ $stars = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/stars.json'
 </section>
 
 <section class="resources starmap__resources">
-  <div class="resources__item" data-name="Month">January</div>
+  <div class="resources__item" data-name="Month" style="min-width: 120px;">January</div>
   <div class="resources__item" data-name="Year">1977</div>
   <div class="resources__item" data-name="UVR" data-change="5">1000</div>
 </section>
@@ -43,8 +44,11 @@ $stars = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/stars.json'
   <div class="starmap-info__field" data-title="Population">4,200 mil</div>
 </section>
 
-<script src="/scripts/Utils.js"></script>
-<script src="/scripts/Time.js"></script>
+<script src="/scripts/defines.js"></script>
+<script src="/scripts/class/Utils.js"></script>
+<script src="/scripts/class/Time.js"></script>
+<script src="/scripts/class/Ship.js"></script>
+<script src="/scripts/class/Player.js"></script>
 <script src="/scripts/starmap.js"></script>
 <script src="/scripts/starmap__info.js"></script>
 <script src="/scripts/resources.js"></script>

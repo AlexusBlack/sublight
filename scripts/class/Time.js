@@ -4,7 +4,7 @@ class Time {
     this.year = startYear;
     this.month = 0;
 
-    this.yearDuration = 3000; //ms
+    this.yearDuration = 1000; //ms
     this.monthDuration = this.yearDuration / 12; //ms
   }
 
@@ -25,10 +25,24 @@ class Time {
     }
   }
 
-  async progressYears(years) {
+  async progressYears(years_n_months) {
+    const years = Math.floor(years_n_months);
+    const months = Math.ceil((years - Math.floor(years)) * 12);
     for(let i = 0; i < years; i++) {
       await this.progressYear();
     }
+    for(let i = 0; i < months; i++) {
+      await this.progressMonth();
+    }
+  }
+
+  async awaitMonth() {
+    return new Promise((resolve) => {
+      this.node.addEventListener('month-passed', function handler(e) {
+        this.removeEventListener('month-passed', handler);
+        resolve();
+      });
+    });
   }
 }
 
