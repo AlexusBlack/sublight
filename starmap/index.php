@@ -30,6 +30,7 @@ $stars = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/stars.json'
 </section>
 
 <section class="resources starmap__resources">
+  <div class="resources__item" data-name="Month">January</div>
   <div class="resources__item" data-name="Year">1977</div>
   <div class="resources__item" data-name="UVR" data-change="5">1000</div>
 </section>
@@ -42,5 +43,8 @@ $stars = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/stars.json'
   <div class="starmap-info__field" data-title="Population">4,200 mil</div>
 </section>
 
+<script src="/scripts/Utils.js"></script>
+<script src="/scripts/Time.js"></script>
 <script src="/scripts/starmap.js"></script>
 <script src="/scripts/starmap__info.js"></script>
+<script src="/scripts/resources.js"></script>
