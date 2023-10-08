@@ -1,0 +1,9 @@
+@import 'common.css';
+
+/* COMPONENTS */
+@import 'components/resources.css';
+
+/* PAGES */
+@import 'pages/starmap.css';
+@import 'pages/starmap__info.css';
+

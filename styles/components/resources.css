@@ -1,0 +1,26 @@
+.resources {
+  display: flex;
+  column-gap: 10px;
+
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+
+  z-index: 100;
+}
+
+.resources__item {
+  padding: 5px;
+  border: 1px solid #333;
+}
+
+.resources__item::before {
+  content: attr(data-name) ": ";
+  font-weight: bold;
+}
+
+.resources__item[data-change]::after {
+  content: " (+" attr(data-change) "/y)";
+}

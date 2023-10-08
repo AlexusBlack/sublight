@@ -1,0 +1,29 @@
+.starmap-info {
+  position: fixed;
+  top: 0; right: 0;
+  width: 250px;
+
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+
+  z-index: 100;
+
+  display: none;
+}
+
+.starmap-info--visible {
+  display: block;
+}
+
+.starmap-info__field::before {
+  content: attr(data-title) ": ";
+  font-weight: bold;
+}
+
+.starmap-info__field {
+  text-transform: capitalize;
+}
