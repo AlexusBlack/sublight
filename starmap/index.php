@@ -19,7 +19,7 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
         <div class="starmap__spaceships"></div>
       </div>
     <?php endforeach; ?>
-    <div class="starmap__object starmap__star starmap__star--settled" style="--x: 6; --y: 6;" id="target" data-type="star" data-year="1977"  data-population="4200" data-name="Sol" data-x="6" data-y="6">
+    <div class="starmap__object starmap__star starmap__star--settled" style="--x: 6; --y: 6;" id="target" data-system-id="1000" data-type="star" data-year="1977"  data-population="4200" data-name="Sol" data-x="6" data-y="6">
       <div class="starmap__star-body" data-star-type="2"></div>
       <label class="starmap__star-name">Sol</label>
       <div class="starmap__spaceships"></div>
