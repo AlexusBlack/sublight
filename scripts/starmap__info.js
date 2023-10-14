@@ -27,9 +27,10 @@
       el.classList.remove('starmap-info--visible');
     });
     object.addEventListener('click', function(e) {
-      if(confirm(`Fly to ${object.dataset.name}?`)) {
-        playerShip.flyToSystem(object.dataset.name);
-      }
+      window['showSystemInfo'](parseInt(object.dataset.systemId));
+      // if(confirm(`Fly to ${object.dataset.name}?`)) {
+      //   playerShip.flyToSystem(object.dataset.name);
+      // }
     });
   });
 })();

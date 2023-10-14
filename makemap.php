@@ -48,6 +48,7 @@ foreach ($star_systems_files as $file) {
         if(!in_array($h_keys[$idx], $non_planet_fields)) {
           $planet[$h_keys[$idx]] = $value;
         }
+        $planet['in system id'] = $data[$h['id']];
       }
       $systems[$system_id]['planets'][] = $planet_id;
       $planets[$planet_id] = $planet;

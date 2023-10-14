@@ -2,6 +2,7 @@
 
 /* COMPONENTS */
 @import 'components/resources.css';
+@import 'components/system-info.css';
 
 /* PAGES */
 @import 'pages/starmap.css';
