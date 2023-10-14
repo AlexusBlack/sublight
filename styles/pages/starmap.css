@@ -71,21 +71,44 @@
   box-shadow: 0 0 0 1px #333;
 }
 
-[data-star-type="0"] .starmap__star-body {
+.starmap__star-body--close {
+  left: calc(50% + 3px);
+}
+
+.starmap__star-body--distant {
+  left: calc(50% - 4px);
+  top: calc(50% - 3px);
+}
+
+.starmap__star-body[data-star-type="0"] {
+  background: white;
+  width: 2px; height: 2px;
+}
+
+.starmap__star-body[data-star-type="1"]  {
   background: red;
   width: 2px; height: 2px;
 }
 
-[data-star-type="1"] .starmap__star-body {
+.starmap__star-body[data-star-type="2"]  {
   background: rgb(255,223,135);
 }
 
-[data-star-type="2"] .starmap__star-body {
+.starmap__star-body[data-star-type="3"]  {
+  background: rgb(173,220,255);
+}
+
+.starmap__star-body[data-star-type="4"]  {
   background: rgb(173,220,255);
   width: 4px; height: 4px;
 }
 
-[data-star-type="3"] .starmap__star-body {
+.starmap__star-body[data-star-type="5"]  {
+  background: rgb(163, 216, 255);
+  width: 4px; height: 4px;
+}
+
+.starmap__star-body[data-star-type="6"]  {
   width: 5px; height: 5px;
 }
 

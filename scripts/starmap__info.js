@@ -11,7 +11,7 @@
   const playerNode = document.querySelector('.starmap__spaceship--player');
   objects.forEach(object => {
     object.addEventListener('mouseenter', function(e) {
-      fields.type.textContent = object.dataset.type;
+      fields.type.textContent = object.dataset.type == 'star' ? 'Star System' : object.dataset.type;
       fields.name.textContent = object.dataset.name;
       fields.year.textContent = 'year' in object.dataset ? object.dataset.year : 'Never';
       fields.population.textContent = 'population' in object.dataset ? parseFloat(object.dataset.population).toLocaleString('En-us') + ' mil' : 'None';
