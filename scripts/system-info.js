@@ -1,16 +1,17 @@
 (function() {
   const el = document.querySelector('.system-info__box');
-  el.querySelector('.system-info__close').addEventListener('click', () => el.classList.add('system-info--hidden'));
+  const titleEl = el.querySelector('.modal__title');
 
   window['showSystemInfo'] = function(systemId) {
-    el.classList.remove('system-info--hidden');
+    el.classList.remove('modal--hidden');
     console.log('showSystemInfo', systemId);
     console.log(theGalaxy.systems[systemId]);
 
-    const list = el.querySelector('.system-info > .system-info__list');
+    const list = el.querySelector('.system-info .system-info__list');
     list.innerHTML = '';
 
     const system = theGalaxy.systems[systemId];
+    titleEl.textContent = system['primary name'] + ' star system';
 
     const primaryStar = makeStarEl(system['primary name'], system['primary star type']);
     list.appendChild(primaryStar);
@@ -178,8 +179,13 @@
     }
 
     // -- Render all
+    const size = parseFloat(planet['size']);
+    let type = 'regular';
+    if(size > 99) type = 'giant';
+    if(size < 0.1) type = 'dwarf';
+    if(size < 0.01) type = 'tiny';
 
-    let html = '<div class="planet-image">';
+    let html = `<div class="planet-image planet-image--scale-${type}">`;
     for(let i = 0; i < overlays.length; i++) {
       html += `<div class="planet-image__overlay" style="background-image: url('${overlays[i].url}');background-size: ${overlays[i].size};"></div>`;
     }

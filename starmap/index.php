@@ -42,45 +42,50 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
   <div class="starmap-info__field" data-title="Population">4,200 mil</div>
 </section>
 
-<section class="system-info__box system-info--hidden">
-  <div class="system-info">
-    <button class="system-info__close">X</button>
-    <ul class="system-info__list">
-      <li class="system-info__item">
-        <article class="system-info__item-line">
-          <div class="system-info__field" data-title="Type">Star</div>
-          <div class="system-info__field" data-title="Name">Sol</div>
-        </article>
-        <ul class="system-info__list">
-          <li class="system-info__item">
-            <article class="system-info__item-line">
-              <div class="system-info__field" data-title="Type">Planet</div>
-              <div class="system-info__field" data-title="Name">Mercury</div>
-            </article>
-          </li>
-          <li class="system-info__item">
-            <article class="system-info__item-line">
-              <div class="system-info__field" data-title="Type">Planet</div>
-              <div class="system-info__field" data-title="Name">Venus</div>
-            </article>
-          </li>
-          <li class="system-info__item">
-            <article class="system-info__item-line">
-              <div class="system-info__field" data-title="Type">Planet</div>
-              <div class="system-info__field" data-title="Name">Earth</div>
-              <div class="system-info__field" data-title="Population">4,200 mil</div>
-            </article>
-            <ul class="system-info__list">
-              <li class="system-info__item">
-                <article class="system-info__item-line">
-                  <div class="system-info__field" data-title="Type">Moon</div>
-                  <div class="system-info__field" data-title="Name">Luna</div>
-                </article>
-              </li>
-            </ul>
-          </li>
-      </li>
-    </ul>
+<section class="system-info__box modal__box modal--hidden">
+  <div class="system-info modal">
+    <div class="modal__info">
+      <h2 class="modal__title">System Info</h2>
+      <button class="system-info__close modal__close-btn">X</button>
+    </div>
+    <div class="modal__content">
+      <ul class="system-info__list">
+        <li class="system-info__item">
+          <article class="system-info__item-line">
+            <div class="system-info__field" data-title="Type">Star</div>
+            <div class="system-info__field" data-title="Name">Sol</div>
+          </article>
+          <ul class="system-info__list">
+            <li class="system-info__item">
+              <article class="system-info__item-line">
+                <div class="system-info__field" data-title="Type">Planet</div>
+                <div class="system-info__field" data-title="Name">Mercury</div>
+              </article>
+            </li>
+            <li class="system-info__item">
+              <article class="system-info__item-line">
+                <div class="system-info__field" data-title="Type">Planet</div>
+                <div class="system-info__field" data-title="Name">Venus</div>
+              </article>
+            </li>
+            <li class="system-info__item">
+              <article class="system-info__item-line">
+                <div class="system-info__field" data-title="Type">Planet</div>
+                <div class="system-info__field" data-title="Name">Earth</div>
+                <div class="system-info__field" data-title="Population">4,200 mil</div>
+              </article>
+              <ul class="system-info__list">
+                <li class="system-info__item">
+                  <article class="system-info__item-line">
+                    <div class="system-info__field" data-title="Type">Moon</div>
+                    <div class="system-info__field" data-title="Name">Luna</div>
+                  </article>
+                </li>
+              </ul>
+            </li>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -90,6 +95,7 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <script src="/scripts/class/Ship.js"></script>
 <script src="/scripts/class/Player.js"></script>
 <script src="/scripts/class/Galaxy.js"></script>
+<script src="/scripts/modal.js"></script>
 <script src="/scripts/starmap.js"></script>
 <script src="/scripts/starmap__info.js"></script>
 <script src="/scripts/resources.js"></script>
