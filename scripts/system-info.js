@@ -29,7 +29,7 @@
     const planets = {};
     system.planets.forEach(planetId => {
       const planet = theGalaxy.planets[planetId];
-      const planetEl = makePlanetEl(planet);
+      const planetEl = makePlanetEl(planet, planetId);
       const parentBodyIdx = parseInt(planet['parent body']);
       if(parentBodyIdx < 0) {
         list.appendChild(planetEl);
@@ -55,7 +55,7 @@
     return star;
   }
 
-  function makePlanetEl(thePlanet) {
+  function makePlanetEl(thePlanet, planetId) {
     const planet = document.createElement('li');
     planet.classList.add('system-info__list-item');
     const planetLine = document.createElement('article');
@@ -68,7 +68,11 @@
     planet.subPlanets.classList.add('system-info__list', 'system-info__sub-list');
     planet.appendChild(planetLine);
     planet.appendChild(planet.subPlanets);
-    planet.addEventListener('click', () => planet.classList.toggle('system-info__list-item--open'));
+    const expandBtn = document.createElement('button');
+    expandBtn.classList.add('system-info__expand-btn');
+    planet.appendChild(expandBtn);
+    expandBtn.addEventListener('click', () => planet.classList.toggle('system-info__list-item--open'));
+    planet.addEventListener('click', () => window['showPlanetInfo'](planetId));
     return planet;
   }
 

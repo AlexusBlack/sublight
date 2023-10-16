@@ -1,0 +1,27 @@
+.tabs__buttons {
+  display: flex;
+}
+
+.tabs__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  color: white
+}
+
+.tabs__button--active {
+  background-color: #ccc;
+  color: black;
+}
+
+.tabs__items {
+  border-top: 1px solid #ccc;
+}
+
+.tabs__item:not(.tabs__item--active) {
+  display: none;
+}

@@ -49,42 +49,39 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
       <button class="system-info__close modal__close-btn">X</button>
     </div>
     <div class="modal__content">
-      <ul class="system-info__list">
-        <li class="system-info__item">
-          <article class="system-info__item-line">
-            <div class="system-info__field" data-title="Type">Star</div>
-            <div class="system-info__field" data-title="Name">Sol</div>
+      <ul class="system-info__list"></ul>
+    </div>
+  </div>
+</section>
+
+<section class="planet-info__box modal__box _modal--hidden">
+  <div class="planet-info modal">
+    <div class="modal__info">
+      <h2 class="modal__title">Planet Info</h2>
+      <button class="system-info__close modal__close-btn">X</button>
+    </div>
+    <div class="modal__content">
+      <section class="tabs" data-active-tab="1">
+        <div class="tabs__buttons">
+          <button class="tabs__button tabs__button--active">Geology</button>
+          <button class="tabs__button">Factions</button>
+        </div>
+        <div class="tabs__items">
+          <article class="tabs__item tabs__item--active">
+            Planet info here
+            <div class="planet-info__left">
+              <div class="planet-info__image"></div>
+              <div class="planet-info__geo-description"></div>
+            </div>
+            <ul class="planet-info__right planet-info__geo-attributes">
+              <li data-name="Size" data-unit="Earths">0.00016</li>
+            </ul>
           </article>
-          <ul class="system-info__list">
-            <li class="system-info__item">
-              <article class="system-info__item-line">
-                <div class="system-info__field" data-title="Type">Planet</div>
-                <div class="system-info__field" data-title="Name">Mercury</div>
-              </article>
-            </li>
-            <li class="system-info__item">
-              <article class="system-info__item-line">
-                <div class="system-info__field" data-title="Type">Planet</div>
-                <div class="system-info__field" data-title="Name">Venus</div>
-              </article>
-            </li>
-            <li class="system-info__item">
-              <article class="system-info__item-line">
-                <div class="system-info__field" data-title="Type">Planet</div>
-                <div class="system-info__field" data-title="Name">Earth</div>
-                <div class="system-info__field" data-title="Population">4,200 mil</div>
-              </article>
-              <ul class="system-info__list">
-                <li class="system-info__item">
-                  <article class="system-info__item-line">
-                    <div class="system-info__field" data-title="Type">Moon</div>
-                    <div class="system-info__field" data-title="Name">Luna</div>
-                  </article>
-                </li>
-              </ul>
-            </li>
-        </li>
-      </ul>
+          <article class="tabs__item">
+            Planet factions overview
+          </article>
+        </div>
+      </section>
     </div>
   </div>
 </section>
@@ -96,7 +93,9 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <script src="/scripts/class/Player.js"></script>
 <script src="/scripts/class/Galaxy.js"></script>
 <script src="/scripts/modal.js"></script>
+<script src="/scripts/tabs.js"></script>
 <script src="/scripts/starmap.js"></script>
 <script src="/scripts/starmap__info.js"></script>
 <script src="/scripts/resources.js"></script>
 <script src="/scripts/system-info.js"></script>
+<script src="/scripts/planet-info.js"></script>
