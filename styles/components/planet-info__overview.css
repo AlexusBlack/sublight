@@ -1,0 +1,9 @@
+.planet-info__image .planet-image {
+  width: 400px; height: 400px;
+}
+
+.planet-info__field::before {
+  content: attr(data-name) ': ';
+  text-transform: capitalize;
+  font-weight: bold;
+}

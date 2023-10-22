@@ -6,6 +6,8 @@ class Time {
 
     this.yearDuration = 1000; //ms
     this.monthDuration = this.yearDuration / 12; //ms
+
+    this.call5years = [];
   }
 
   async progressMonth() {
@@ -15,6 +17,9 @@ class Time {
       this.month = 0;
       this.year++;
       this.node.dispatchEvent(new CustomEvent('year-passed', {detail: {year: this.year}}));
+      if(this.year !== 1975 && this.year % 5 === 0) {
+        await Promise.all(this.call5years.map(fn => fn()));
+      }
     }
     this.node.dispatchEvent(new CustomEvent('month-passed', {detail: {year: this.year, month: this.month}}));
   }
@@ -46,4 +51,4 @@ class Time {
   }
 }
 
-const theTime = new Time(1977);
+const theTime = new Time(1975);

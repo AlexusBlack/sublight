@@ -28,70 +28,20 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
   </div>
 </section>
 
-<section class="resources starmap__resources">
-  <div class="resources__item" data-name="Month" style="min-width: 120px;">January</div>
-  <div class="resources__item" data-name="Year">1977</div>
-  <div class="resources__item" data-name="UVR" data-change="5">1000</div>
-</section>
-
-<section class="starmap-info">
-  <div class="starmap-info__field" data-title="Type">Star</div>
-  <div class="starmap-info__field" data-title="Name">Sol</div>
-  <div class="starmap-info__field" data-title="Distance">0.00 LY</div>
-  <div class="starmap-info__field" data-title="Year">1977</div>
-  <div class="starmap-info__field" data-title="Population">4,200 mil</div>
-</section>
-
-<section class="system-info__box modal__box modal--hidden">
-  <div class="system-info modal">
-    <div class="modal__info">
-      <h2 class="modal__title">System Info</h2>
-      <button class="system-info__close modal__close-btn">X</button>
-    </div>
-    <div class="modal__content">
-      <ul class="system-info__list"></ul>
-    </div>
-  </div>
-</section>
-
-<section class="planet-info__box modal__box _modal--hidden">
-  <div class="planet-info modal">
-    <div class="modal__info">
-      <h2 class="modal__title">Planet Info</h2>
-      <button class="system-info__close modal__close-btn">X</button>
-    </div>
-    <div class="modal__content">
-      <section class="tabs" data-active-tab="1">
-        <div class="tabs__buttons">
-          <button class="tabs__button tabs__button--active">Geology</button>
-          <button class="tabs__button">Factions</button>
-        </div>
-        <div class="tabs__items">
-          <article class="tabs__item tabs__item--active">
-            Planet info here
-            <div class="planet-info__left">
-              <div class="planet-info__image"></div>
-              <div class="planet-info__geo-description"></div>
-            </div>
-            <ul class="planet-info__right planet-info__geo-attributes">
-              <li data-name="Size" data-unit="Earths">0.00016</li>
-            </ul>
-          </article>
-          <article class="tabs__item">
-            Planet factions overview
-          </article>
-        </div>
-      </section>
-    </div>
-  </div>
-</section>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/resources-bar.php') ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/starmap-info.php') ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/system-info.php') ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/planet-info.php') ?>
 
 <script src="/scripts/defines.js"></script>
 <script src="/scripts/class/Utils.js"></script>
+<script src="/scripts/class/Ethics.js"></script>
 <script src="/scripts/class/Time.js"></script>
 <script src="/scripts/class/Ship.js"></script>
 <script src="/scripts/class/Player.js"></script>
+<script src="/scripts/class/Faction.js"></script>
 <script src="/scripts/class/Galaxy.js"></script>
+<script src="/scripts/class/Planet.js"></script>
 <script src="/scripts/modal.js"></script>
 <script src="/scripts/tabs.js"></script>
 <script src="/scripts/starmap.js"></script>

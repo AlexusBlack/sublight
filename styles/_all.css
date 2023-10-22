@@ -4,7 +4,9 @@
 @import 'components/resources.css';
 @import 'components/modal.css';
 @import 'components/tabs.css';
+@import 'components/grid.css';
 @import 'components/system-info.css';
+@import 'components/planet-info__overview.css';
 
 /* PAGES */
 @import 'pages/starmap.css';

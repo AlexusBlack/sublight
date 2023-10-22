@@ -39,4 +39,13 @@ class Utils {
   static capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+
+  static getFlatScienceMult(lvl, perLvl) {
+    return lvl * perLvl;
+  }
+
+  static getScientificEpochMult(lvl, perEpoch) {
+    const epochs = Math.floor(lvl / 10);
+    return epochs * perEpoch;
+  }
 }
