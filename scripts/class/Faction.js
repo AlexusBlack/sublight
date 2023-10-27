@@ -16,7 +16,6 @@ class Faction {
     this.militaryStrength = 0;
 
     this.populationGroups = this.calculatePopulationGroups();
-    this.calculatePlanetaryTechAndBleedThrough();
     this.calculateStrength();
 
     this.economicalSystem = this.getEconomicalSystem();
@@ -27,11 +26,13 @@ class Faction {
     // TODO: here we generate events for the faction
   }
 
-  process5Years() {
+  grow5Years() {
     this.growTerritory();
     this.growPopulation();
     this.growScience();
-    this.calculatePlanetaryTechAndBleedThrough();
+  }
+
+  calculate5Years() {
     this.calculatePopulationGroups();
     this.populationGroups = this.calculatePopulationGroups();
 
@@ -120,7 +121,7 @@ class Faction {
     if(this.ethics['pacifist'].active) baseGrowth += 1; // peace
     if(this.ethics['xenophile'].active) baseGrowth += 1; // migration
 
-    const maxPopulationDensity = 25; // 25,000 people per km2
+    const maxPopulationDensity = 2; // 2,000 people per km2
     const currentPopulationDensity = this.population / this.territory;
     //console.log(`Current Population Density: ${currentPopulationDensity}`);
 
@@ -158,19 +159,6 @@ class Faction {
     this.technology['social'] += technologicalProgress * socialShare;
     this.technology['applied'] += technologicalProgress * appliedShare;
 
-  }
-
-  calculatePlanetaryTechAndBleedThrough() {
-    Utils.TechnologyTypes.forEach(type => {
-      // identifying planetary tech level
-      if(this.technology[type] > this.planet.cls.technology[type]) {
-        this.planet.cls.technology[type] = this.technology[type];
-      }
-      // technology bleed through. Faction tech lvl can't be lower than Utils.SBTRate of planetary tech level
-      if(this.technology[type] < this.planet.cls.technology[type] * Utils.SBTRate) {
-        this.technology[type] = this.planet.cls.technology[type] * Utils.SBTRate;
-      }
-    });
   }
 
   getScientistsShare() {

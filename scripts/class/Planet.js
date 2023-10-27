@@ -7,6 +7,39 @@ class Planet {
     this.technology = { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 };
   }
 
+  recalculateFactionStrengths() {
+    this.factions.forEach(faction => faction.calculateStrength());
+  }
+
+  process5Years() {
+    this.factions.forEach(f => f.grow5Years());
+    this.calculatePlanetaryTechLvl();
+    this.calculateTechBleedThrough();
+    this.factions.forEach(f => f.calculate5Years());
+  }
+
+  calculatePlanetaryTechLvl() {
+    this.factions.forEach(faction => {
+      Utils.TechnologyTypes.forEach(type => {
+        // identifying planetary tech level
+        if(faction.technology[type] > this.technology[type]) {
+          this.technology[type] = faction.technology[type];
+        }
+      });
+    });
+  }
+
+  calculateTechBleedThrough() {
+    this.factions.forEach(faction => {
+      Utils.TechnologyTypes.forEach(type => {
+        // identifying planetary tech level
+        if(faction.technology[type] < this.technology[type] * Utils.SBTRate) {
+          faction.technology[type] = this.technology[type] * Utils.SBTRate;
+        }
+      });
+    });
+  }
+
 
   static compcolors = [
     ["/img/planeticons/rockyPlanet.png","/img/planeticons/rockyPlanet2.png","/img/planeticons/rockyPlanet3.png","/img/planeticons/rockyPlanet4.png","/img/planeticons/rockyPlanet5.png","/img/planeticons/rockyPlanet6.png",],

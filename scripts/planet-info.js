@@ -82,19 +82,32 @@
               callbacks: {
                 label: function(context) {
                   const index = context.dataIndex;
-                  const strength = context.dataset.data[index];
+                  let strength = context.dataset.data[index];
                   const name = context.label;
                   const territory = territories[index];
                   const population = populations[index];
                   const political = politicals[index];
                   const economy = economies[index];
+                  let technology = technologies[index];
+
+                  if(strength > 1000000) {
+                    strength = Math.round(strength).toExponential(2);
+                  } else {
+                    strength = Math.round(strength).toLocaleString();
+                  }
+                  if(technology > 1000000) {
+                    technology = Math.round(technology).toExponential(2);
+                  } else {
+                    technology = Math.round(technology).toLocaleString();
+                  }
+
                   return [
                     `${political}`,
                     `Economy: ${economy}`,
-                    `Strength: ${Math.round(strength).toLocaleString()}`,
+                    `Strength: ${strength}`,
                     `Territory: ${territory.toLocaleString()} km²`,
                     `Population: ${Math.round(population).toLocaleString()},000`,
-                    `Technology: ${technologies[index].toLocaleString()}`
+                    `Technology: ${technology}`,
                   ];
                 }
               }

@@ -13,9 +13,7 @@ class Galaxy {
   }
 
   process5Years() {
-    this.inhabitedPlanets.forEach(planet => {
-      planet.factions.forEach(f => f.process5Years());
-    });
+    this.inhabitedPlanets.forEach(planet => planet.process5Years());
   }
 }
 
@@ -129,4 +127,8 @@ const theGalaxy = new Galaxy();
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, null);
   theEarth.cls.factions.push(africaFaction);
+
+  theEarth.cls.calculatePlanetaryTechLvl();
+  theEarth.cls.calculateTechBleedThrough();
+  theEarth.cls.recalculateFactionStrengths();
 })();
