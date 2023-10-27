@@ -12,6 +12,11 @@ class Galaxy {
     this.planets = await response.json();
   }
 
+  process1Month() {
+    this.inhabitedPlanets.forEach(planet => planet.process1Month());
+
+  }
+
   process5Years() {
     this.inhabitedPlanets.forEach(planet => planet.process5Years());
   }
@@ -21,6 +26,7 @@ const theGalaxy = new Galaxy();
 (async () => {
   await theGalaxy.loadGalaxy();
 
+  theTime.call1month.push(() => theGalaxy.process1Month());
   theTime.call5years.push(() => theGalaxy.process5Years());
 
   const theEarth = theGalaxy.planets.filter(p => p.name == 'Earth')[0];

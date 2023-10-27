@@ -11,6 +11,13 @@ class Planet {
     this.factions.forEach(faction => faction.calculateStrength());
   }
 
+  process1Month() {
+    this.factions.forEach(faction => {
+      theModifiers.clean(faction);
+      theEvents.tryTriggerEvents('faction', faction);
+    });
+  }
+
   process5Years() {
     this.factions.forEach(f => f.grow5Years());
     this.calculatePlanetaryTechLvl();

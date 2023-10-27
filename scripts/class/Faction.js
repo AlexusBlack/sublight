@@ -10,6 +10,9 @@ class Faction {
     this.technology = technology; // { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 }
     this.diplomacy = diplomacy;
 
+    this.triggeredEvents = {};
+    this.modifiers = [];
+
     this.strength = 0;
     this.scienceStrength = 0;
     this.cultureStrength = 0;
@@ -124,6 +127,7 @@ class Faction {
     const maxPopulationDensity = 2; // 2,000 people per km2
     const currentPopulationDensity = this.population / this.territory;
     //console.log(`Current Population Density: ${currentPopulationDensity}`);
+    baseGrowth = theModifiers.apply(this.modifiers, 'faction_population_growth', baseGrowth);
 
     // TODO: factor in how suitable the planet is for life
 
@@ -303,6 +307,8 @@ class Faction {
     } else if(this.economicalSystem === 'planned') {
       generalStrength *= 0.70;
     }
+
+    generalStrength = theModifiers.apply(this.modifiers, 'faction_general_strength', generalStrength);
 
     // sum up the strength of each group
     this.strength = this.scienceStrength + this.cultureStrength + this.militaryStrength + generalStrength;

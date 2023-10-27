@@ -36,11 +36,19 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/planet-info.php') ?>
 
 <script src="/vendor/chart.min.js"></script>
+<script src="/vendor/random.js"></script>
 
 <script src="/scripts/defines.js"></script>
 <script src="/scripts/class/Utils.js"></script>
 <script src="/scripts/class/Ethics.js"></script>
 <script src="/scripts/class/Time.js"></script>
+
+<script src="/scripts/class/Events.js"></script>
+<script src="/scripts/events/economic_events.js"></script>
+<script src="/scripts/class/Modifiers.js"></script>
+<script src="/scripts/modifiers/economic_modifiers.js"></script>
+
+
 <script src="/scripts/class/Ship.js"></script>
 <script src="/scripts/class/Player.js"></script>
 <script src="/scripts/class/Faction.js"></script>

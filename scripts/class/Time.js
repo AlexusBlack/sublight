@@ -7,6 +7,7 @@ class Time {
     this.yearDuration = 1000; //ms
     this.monthDuration = this.yearDuration / 12; //ms
 
+    this.call1month = [];
     this.call5years = [];
   }
 
@@ -21,6 +22,7 @@ class Time {
         await Promise.all(this.call5years.map(fn => fn()));
       }
     }
+    await Promise.all(this.call1month.map(fn => fn()));
     this.node.dispatchEvent(new CustomEvent('month-passed', {detail: {year: this.year, month: this.month}}));
   }
 
@@ -48,6 +50,12 @@ class Time {
         resolve();
       });
     });
+  }
+
+  async awaitMonths(n) {
+    for(let i = 0; i < n; i++) {
+      await this.awaitMonth();
+    }
   }
 }
 
