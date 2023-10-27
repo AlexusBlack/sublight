@@ -1,4 +1,8 @@
 class Utils {
+  static TechnologyTypes = ['formal', 'natural', 'social', 'applied'];
+  static SSMult = 5; // science strength multiplier
+  static SBTRate = 1/10; // science bleedthrough
+  static SGMult = 1/100000; // science growth multiplier
   static wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }

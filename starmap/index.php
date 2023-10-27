@@ -19,11 +19,13 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
         <div class="starmap__spaceships"></div>
       </div>
     <?php endforeach; ?>
+    <?php /*
     <div class="starmap__object starmap__star starmap__star--settled" style="--x: 6; --y: 6;" id="target" data-system-id="1000" data-type="star" data-year="1977"  data-population="4200" data-name="Sol" data-x="6" data-y="6">
       <div class="starmap__star-body" data-star-type="2"></div>
       <label class="starmap__star-name">Sol</label>
       <div class="starmap__spaceships"></div>
     </div>
+    */ ?>
 
   </div>
 </section>
@@ -33,6 +35,8 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/system-info.php') ?>
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/planet-info.php') ?>
 
+<script src="/vendor/chart.min.js"></script>
+
 <script src="/scripts/defines.js"></script>
 <script src="/scripts/class/Utils.js"></script>
 <script src="/scripts/class/Ethics.js"></script>
@@ -40,8 +44,8 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <script src="/scripts/class/Ship.js"></script>
 <script src="/scripts/class/Player.js"></script>
 <script src="/scripts/class/Faction.js"></script>
-<script src="/scripts/class/Galaxy.js"></script>
 <script src="/scripts/class/Planet.js"></script>
+<script src="/scripts/class/Galaxy.js"></script>
 <script src="/scripts/modal.js"></script>
 <script src="/scripts/tabs.js"></script>
 <script src="/scripts/starmap.js"></script>

@@ -7,3 +7,7 @@
   text-transform: capitalize;
   font-weight: bold;
 }
+
+.planet-info__factions-chart-box {
+  max-width: 350px;
+}

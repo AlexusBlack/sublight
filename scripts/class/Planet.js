@@ -2,6 +2,9 @@ class Planet {
   constructor(planetId) {
     this.planetId = planetId;
     this.factions = [];
+
+    // planetary tech level, maximum from every faction in category
+    this.technology = { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 };
   }
 
 

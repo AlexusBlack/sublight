@@ -4,7 +4,7 @@ let CONF_MAP_ZOOM_SPEED = 0.05;
   let scale = 355;
   el.style.setProperty('--scale', scale + 'px');
   // start position
-  let target = document.getElementById('target');
+  let target = document.querySelector('.starmap__object[data-name="Sol"]');
   target.scrollIntoView({behavior: 'instant', block: 'center', inline: 'center'});
 
   el.addEventListener('wheel', function(e) {

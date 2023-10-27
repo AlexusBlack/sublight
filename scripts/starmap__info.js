@@ -28,9 +28,12 @@
     });
     object.addEventListener('click', function(e) {
       window['showSystemInfo'](parseInt(object.dataset.systemId));
-      // if(confirm(`Fly to ${object.dataset.name}?`)) {
-      //   playerShip.flyToSystem(object.dataset.name);
-      // }
+    });
+    object.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      if(confirm(`Fly to ${object.dataset.name}?`)) {
+        playerShip.flyToSystem(object.dataset.name);
+      }
     });
   });
 })();
