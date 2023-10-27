@@ -8,8 +8,8 @@
 
   window['showPlanetInfo'] = function(planetId) {
     el.classList.remove('modal--hidden');
-    console.log('showPlanetInfo', planetId);
-    console.log(theGalaxy.planets[planetId]);
+    // console.log('showPlanetInfo', planetId);
+    // console.log(theGalaxy.planets[planetId]);
 
     const planet = theGalaxy.planets[planetId];
     titleEl.textContent = 'Planet: ' + planet['name'];

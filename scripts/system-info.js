@@ -4,8 +4,8 @@
 
   window['showSystemInfo'] = function(systemId) {
     el.classList.remove('modal--hidden');
-    console.log('showSystemInfo', systemId);
-    console.log(theGalaxy.systems[systemId]);
+    // console.log('showSystemInfo', systemId);
+    // console.log(theGalaxy.systems[systemId]);
 
     const list = el.querySelector('.system-info .system-info__list');
     list.innerHTML = '';

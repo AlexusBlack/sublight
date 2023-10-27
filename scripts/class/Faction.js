@@ -298,6 +298,12 @@ class Faction {
       0.5,   0.5,   0.5,    0.5   // epoch
     );
 
+    if(this.economicalSystem === 'monopolised') {
+      generalStrength *= 0.80;
+    } else if(this.economicalSystem === 'planned') {
+      generalStrength *= 0.70;
+    }
+
     // sum up the strength of each group
     this.strength = this.scienceStrength + this.cultureStrength + this.militaryStrength + generalStrength;
   }
