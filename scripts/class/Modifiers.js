@@ -48,6 +48,10 @@ class Modifiers {
       return true;
     });
   }
+
+  has(target, key) {
+    return target.modifiers.some(modifier => modifier.key === key);
+  }
 }
 const theModifiers = new Modifiers();
 

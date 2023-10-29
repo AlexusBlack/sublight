@@ -45,8 +45,12 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 
 <script src="/scripts/class/Events.js"></script>
 <script src="/scripts/events/economic_events.js"></script>
+<script src="/scripts/events/culture_events.js"></script>
+<script src="/scripts/events/political_events.js"></script>
 <script src="/scripts/class/Modifiers.js"></script>
 <script src="/scripts/modifiers/economic_modifiers.js"></script>
+<script src="/scripts/modifiers/culture_modifiers.js"></script>
+<script src="/scripts/modifiers/political_modifiers.js"></script>
 
 
 <script src="/scripts/class/Ship.js"></script>

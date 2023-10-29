@@ -52,4 +52,13 @@ class Utils {
     const epochs = Math.floor(lvl / 10);
     return epochs * perEpoch;
   }
+
+  static renderHistory(history) {
+    const categoryBacklog = {};
+    history.forEach(entry => {
+      if(entry.category in categoryBacklog && categoryBacklog[entry.category] == entry.record) return;
+      categoryBacklog[entry.category] = entry.record;
+      console.log(`${Utils.getMonthName(entry.month)} ${entry.year}: ${entry.record}`);
+    });
+  }
 }

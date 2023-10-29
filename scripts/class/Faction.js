@@ -13,6 +13,8 @@ class Faction {
     this.triggeredEvents = {};
     this.modifiers = [];
 
+    this.history = [];
+
     this.strength = 0;
     this.scienceStrength = 0;
     this.cultureStrength = 0;
