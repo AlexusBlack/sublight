@@ -43,7 +43,7 @@ const theGalaxy = new Galaxy();
   const usaFaction = new Faction(theEarth.id, 'USA', 220200, 3000000, usaEthics, {
     'formal': 100, 'natural': 100, 'social': 100, 'applied': 100
   }, {
-    'alliance': [4, 6], 'rival': [1], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [4, 6], 'rival': [1], 'rivaledBy': [1], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   usaFaction.baseNames = ['USA', 'United States', 'America', 'US', 'North America'];
   usaFaction.baseNamesAdjectives = ['American', 'US', 'North American'];
@@ -57,7 +57,7 @@ const theGalaxy = new Galaxy();
   const ussrFaction = new Faction(theEarth.id, 'USSR', 257800, 22400000, ussrEthics, {
     'formal': 80, 'natural': 80, 'social': 80, 'applied': 80
   }, {
-    'alliance': [], 'rival': [0], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [], 'rival': [0], 'rivaledBy': [0], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   ussrFaction.baseNames = ['Soviet Union', 'Russia', 'Soviet'];
   ussrFaction.baseNamesAdjectives = ['Soviet', 'Russian'];
@@ -71,7 +71,7 @@ const theGalaxy = new Galaxy();
   const chinaFaction = new Faction(theEarth.id, 'China', 916400, 9600000, chinaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
-    'alliance': [], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   chinaFaction.baseNames = ['China', 'Han', 'Zhongguo'];
   chinaFaction.baseNamesAdjectives = ['Chinese', 'Han'];
@@ -85,7 +85,7 @@ const theGalaxy = new Galaxy();
   const indiaFaction = new Faction(theEarth.id, 'India', 623500, 3287000, indiaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
-    'alliance': [], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   indiaFaction.baseNames = ['India', 'Hindustan', 'Bharat', 'Hindu'];
   indiaFaction.baseNamesAdjectives = ['Indian', 'Hindu', 'Bharati'];
@@ -99,7 +99,7 @@ const theGalaxy = new Galaxy();
   const eecFaction = new Faction(theEarth.id, 'European Economic Community', 676770, 4233000, eecEthics, {
     'formal': 20, 'natural': 20, 'social': 20, 'applied': 20
   }, {
-    'alliance': [0], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [0], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   eecFaction.baseNames = ['European Community', 'European Union', 'Europe', 'France', 'Germany', 'Spain'];
   eecFaction.baseNamesAdjectives = ['European', 'French', 'German', 'Spanish'];
@@ -113,7 +113,7 @@ const theGalaxy = new Galaxy();
   const arabFaction = new Faction(theEarth.id, 'Arab Nations', 160000, 13000000, arabEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
-    'alliance': [], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   arabFaction.baseNames = ['Arab Nations', 'Arab League', 'Arab', 'North Africa'];
   arabFaction.baseNamesAdjectives = ['Arab', 'North African', 'Arabic'];
@@ -127,7 +127,7 @@ const theGalaxy = new Galaxy();
   const japanFaction = new Faction(theEarth.id, 'Japan', 111600, 377973, japanEthics, {
     'formal': 95, 'natural': 95, 'social': 95, 'applied': 95
   }, {
-    'alliance': [0], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [0], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   japanFaction.baseNames = ['Japan', 'Nippon', 'Nihon'];
   japanFaction.baseNamesAdjectives = ['Japanese', 'Nipponese', 'Nihonese'];
@@ -141,7 +141,7 @@ const theGalaxy = new Galaxy();
   const southAmericaFaction = new Faction(theEarth.id, 'South America', 202000, 6878000, southAmericaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
-    'alliance': [], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   southAmericaFaction.baseNames = ['South America', 'Latin America', 'Brazil', 'Argentina'];
   southAmericaFaction.baseNamesAdjectives = ['South American', 'Latin American', 'Brazilian', 'Argentinian'];
@@ -155,7 +155,7 @@ const theGalaxy = new Galaxy();
   const africaFaction = new Faction(theEarth.id, 'Africa', 250000, 17000000, africaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
-    'alliance': [], 'rival': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
+    'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
   });
   africaFaction.baseNames = ['Africa', 'South Africa', 'Turkey', 'Egypt', 'Ethiopia', 'Nigeria'];
   africaFaction.baseNamesAdjectives = ['African', 'South African', 'Turkish', 'Egyptian', 'Ethiopian', 'Nigerian'];

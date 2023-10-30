@@ -7,6 +7,127 @@ class Planet {
     this.technology = { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 };
   }
 
+  calculateDiplomaticRelations() {
+    const validRivalries = this.getValidRivalries();
+    const validThreatTargets = this.getValidThreatTargets();
+    const validProtectionTargets = this.getValidProtectionTargets();
+
+    this.factions.forEach(faction => {
+      faction.diplomacy.rivaledBy = [];
+      faction.diplomacy.threatenedBy = [];
+      faction.diplomacy.protectedBy = [];
+    });
+    this.factions.forEach(faction => {
+      // get first rival from available rivals list
+      faction.diplomacy.rival = validRivalries[faction.id].length > 0 ? [validRivalries[faction.id][0]] : [];
+      // add to rival's rivaledBy list
+      faction.diplomacy.rival.forEach(rivalId => {
+        theGalaxy.factions[rivalId].diplomacy.rivaledBy.push(faction.id);
+      });
+
+      // get first threat targe from available thread targets list
+      faction.diplomacy.threatens = validThreatTargets[faction.id].length > 0 ? [validThreatTargets[faction.id][0]] : [];
+      // add to threat target's threatenedBy list
+      faction.diplomacy.threatens.forEach(threatTargetId => {
+        theGalaxy.factions[threatTargetId].diplomacy.threatenedBy.push(faction.id);
+      });
+
+      // get first protection target from available protection targets list
+      faction.diplomacy.protects = validProtectionTargets[faction.id].length > 0 ? [validProtectionTargets[faction.id][0]] : [];
+      // add to protection target's protectedBy list
+      faction.diplomacy.protects.forEach(protectionTargetId => {
+        theGalaxy.factions[protectionTargetId].diplomacy.protectedBy.push(faction.id);
+      });
+
+      // TODO: validate alliances
+      // TODO: establish new alliances if possible
+    });
+  }
+
+  getValidRivalries() {
+    const validRivalries = {};
+    // build list of possible rivalries
+    this.factions.forEach(faction1 => {
+      if(!(faction1.id in validRivalries)) validRivalries[faction1.id] = [];
+      this.factions.forEach(faction2 => {
+        if(faction1.id !== faction2.id) {
+          if(this.isValidRivalry(faction1.id, faction2.id)) validRivalries[faction1.id].push(faction2.id);
+        }
+      });
+    });
+    return validRivalries;
+  }
+
+  getValidThreatTargets() {
+    const validThreatTargets = {};
+    // build list of possible threat targets
+    this.factions.forEach(faction1 => {
+      if(!(faction1.id in validThreatTargets)) validThreatTargets[faction1.id] = [];
+      // democracies that are not militarists don't threaten
+      if(faction1.politicalSystemType === 'democracy' && !faction1.ethics['militarist'].active) return false;
+      this.factions.forEach(faction2 => {
+        if(faction1.id !== faction2.id) {
+          if(this.isValidThreatTarget(faction1.id, faction2.id)) validThreatTargets[faction1.id].push(faction2.id);
+        }
+      });
+      // sort by faction strength, weakest first
+      validThreatTargets[faction1.id].sort((a, b) => theGalaxy.factions[a].strength - theGalaxy.factions[b].strength);
+    });
+    return validThreatTargets;
+  }
+
+  getValidProtectionTargets() {
+    const validProtectionTargets = {};
+    // build list of possible protection targets
+    this.factions.forEach(faction1 => {
+      if(!(faction1.id in validProtectionTargets)) validProtectionTargets[faction1.id] = [];
+      this.factions.forEach(faction2 => {
+        if(faction1.id !== faction2.id) {
+          if(this.isValidProtectionTarget(faction1.id, faction2.id)) validProtectionTargets[faction1.id].push(faction2.id);
+        }
+      });
+      // sort by faction strength, weakest first
+      validProtectionTargets[faction1.id].sort((a, b) => theGalaxy.factions[a].strength - theGalaxy.factions[b].strength);
+    });
+    return validProtectionTargets;
+  }
+
+
+  isValidRivalry(faction1Id, faction2Id) {
+    const faction1 = theGalaxy.factions[faction1Id];
+    const faction2 = theGalaxy.factions[faction2Id];
+    // both can't be democracy or socialism, as those don't rival each other
+    if(['democracy', 'socialism'].includes(faction1.politicalSystemType) &&
+      faction1.politicalSystemType === faction2.politicalSystemType) return false;
+    // strength difference can't be large than 30% of the weaker faction
+    const strengthDifference = Math.abs(faction1.strength - faction2.strength);
+    const weakerStrength = Math.min(faction1.strength, faction2.strength);
+    if(strengthDifference > weakerStrength * 0.5) return false;
+    return true;
+  }
+
+  isValidThreatTarget(faction1Id, faction2Id) {
+    const faction1 = theGalaxy.factions[faction1Id];
+    const faction2 = theGalaxy.factions[faction2Id];
+    // both can't be democracy or socialism, as those don't threaten each other
+    if(['democracy', 'socialism'].includes(faction1.politicalSystemType) &&
+      faction1.politicalSystemType === faction2.politicalSystemType) return false;
+    // target can't be stronger than 15% of the threatening faction
+    if(faction2.strength > faction1.strength * 0.15) return false;
+    return true;
+  }
+
+  isValidProtectionTarget(faction1Id, faction2Id) {
+    const faction1 = theGalaxy.factions[faction1Id];
+    const faction2 = theGalaxy.factions[faction2Id];
+    // dictatorships don't protect and can't be protected
+    if(faction1.politicalSystemType === 'dictatorship' || faction2.politicalSystemType === 'dictatorship') return false;
+    // target must be of same political system type and can't be stronger than 15% of the protecting faction
+    if(faction1.politicalSystemType !== faction2.politicalSystemType) return false;
+    if(faction2.strength > faction1.strength * 0.20) return false;
+    return true;
+  }
+
   recalculateFactionStrengths() {
     this.factions.forEach(faction => faction.calculateStrength());
   }
@@ -23,6 +144,8 @@ class Planet {
     this.calculatePlanetaryTechLvl();
     this.calculateTechBleedThrough();
     this.factions.forEach(f => f.calculate5Years());
+
+    this.calculateDiplomaticRelations();
   }
 
   calculatePlanetaryTechLvl() {

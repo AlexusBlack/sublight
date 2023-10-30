@@ -167,7 +167,7 @@
             drawDiplomaticRelations(index, 'rival', 'orange', ctx, factions, arcsCenterPoints);
             drawDiplomaticRelations(index, 'war', 'red', ctx, factions, arcsCenterPoints);
             drawDiplomaticRelations(index, 'protects', 'green', ctx, factions, arcsCenterPoints);
-            drawDiplomaticRelations(index, 'threatens', 'orange', ctx, factions, arcsCenterPoints);
+            drawDiplomaticRelations(index, 'threatens', 'yellow', ctx, factions, arcsCenterPoints);
           });
         },
         afterDatasetsDraw: function(chart, args, options) {
