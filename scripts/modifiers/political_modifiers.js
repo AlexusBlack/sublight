@@ -35,3 +35,8 @@ politicalCycleDepression.effects = [
   {type: 'faction_general_strength_mult', value: 0.6},
 ];
 
+const politicalRecentReform = new Modifier('political_recent_reform');
+politicalRecentReform.durationMonths = 12 * 6;
+
+const politicalRecentRevolt = new Modifier('political_recent_revolt');
+politicalRecentRevolt.durationMonths = 12 * 6;

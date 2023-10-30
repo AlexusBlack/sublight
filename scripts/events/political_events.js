@@ -92,3 +92,70 @@ politicalCycleEvent.actions_func = function(faction) {
   theModifiers.add(faction, modifier);
 };
 
+
+/* =========== POLITICAL CONFLICT =========== */
+const politicalConflictEvent = new Event('political_conflict', 'faction');
+politicalConflictEvent.mean_months_to_happen = 3;
+politicalConflictEvent.trigger_func = function(faction) {
+  return theModifiers.has(faction, 'political_cycle_conflict') && !theModifiers.hasAny(faction, ['political_recent_reform', 'political_recent_revolt']);
+};
+
+politicalConflictEvent.actions_func = function(faction) {
+  const politicalConflictSituations = {
+    'small_revolt': 0.05,
+    'nothing_happens': 0.15, // dumb luck
+    'political_reform': 0.8
+  };
+  const situation = weightedRandom(Object.keys(politicalConflictSituations), Object.values(politicalConflictSituations)).item;
+  if(situation === 'nothing_happens') return;
+  // calculate reform/revolt ethics
+  const possibleEthicChange = {
+    'authoritarian': 0.3,
+    'libertarian': 0.2,
+    'communal': 0.3,
+    'individual': 0.2,
+  };
+  const ethicChange = weightedRandom(Object.keys(possibleEthicChange), Object.values(possibleEthicChange)).item;
+  const oppositeEthicChange = Ethics.ethics_and_opposites[ethicChange];
+
+  const newEthicalSystem = new Ethics();
+  newEthicalSystem.ethics = Object.assign({}, faction.ethics);
+  newEthicalSystem.increaseEthic(ethicChange);
+
+  const ethicVal = newEthicalSystem.calculateValue();
+  let otherEthicChange = '';
+  if(ethicVal > 3) {
+    otherEthicChange = 'less ' + newEthicalSystem.decreaseRandomEthic([ethicChange, oppositeEthicChange]);
+  } else if(ethicVal < 3) {
+    otherEthicChange = 'more ' + newEthicalSystem.increaseRandomEthic([ethicChange, oppositeEthicChange]);
+  }
+
+  if(situation === 'small_revolt') {
+    //console.log(`Small revolt in <${faction.name}>`, newEthicalSystem);
+    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_conflict_revolt_' + theTime.year,  record: `Political instability leads to a small revolt with demand for nation to become more ${ethicChange}.`});
+    theModifiers.add(faction, 'political_recent_revolt');
+    // TODO: implement revolts
+  } else {
+    // TODO: implement political reform
+    faction.ethicalSystem = newEthicalSystem;
+    faction.ethics = newEthicalSystem.ethics;
+    theModifiers.add(faction, 'political_recent_reform');
+    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_conflict_reform_' + theTime.year,  record: `Political instability leads to a political reform that makes nation more ${ethicChange}.` + (otherEthicChange !== '' ? ` As a side effect the nation became ${otherEthicChange}.` : '')});
+
+    const newEconomicSystem = faction.getEconomicalSystem();
+    if(faction.economicalSystem !== newEconomicSystem) {
+      faction.economicalSystem = newEconomicSystem;
+      faction.history.push({year: theTime.year, month: theTime.month, category: 'economic_reform_' + theTime.year,  record: `Recent political changes resulted in change of economical system to ${newEconomicSystem}.`});
+    }
+    const newPoliticalSystem = faction.getPoliticalSystem();
+    if(faction.politicalSystem !== newPoliticalSystem.system) {
+      faction.history.push({year: theTime.year, month: theTime.month, category: 'political_reform_' + theTime.year,  record: `To resolve recent political conflict the state polical system was reorganised into ${newPoliticalSystem.system} (${newPoliticalSystem.type}).`});
+      if(faction.politicalSystemType !== newPoliticalSystem.type) {
+        faction.name = newPoliticalSystem.name;
+        faction.history.push({year: theTime.year, month: theTime.month, category: 'faction_name_change_' + theTime.year,  record: `To reflect the new political system the nation changed its name to ${newPoliticalSystem.name}.`});
+      }
+      faction.politicalSystemType = newPoliticalSystem.type;
+      faction.politicalSystem = newPoliticalSystem.system;
+    }
+  }
+};

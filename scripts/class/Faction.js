@@ -9,6 +9,9 @@ class Faction {
     this.ethics = ethics.ethics;
     this.technology = technology; // { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 }
     this.diplomacy = diplomacy;
+    this.baseNames = [];
+    this.baseNamesAdjectives = [];
+    this.fractionNames = [];
 
     this.triggeredEvents = {};
     this.modifiers = [];
@@ -24,7 +27,11 @@ class Faction {
     this.calculateStrength();
 
     this.economicalSystem = this.getEconomicalSystem();
-    this.politicalSystem = this.getPoliticalSystem();
+
+    let calcPoliticalSystem = this.getPoliticalSystem();
+    this.politicalSystemType = calcPoliticalSystem.type;
+    this.politicalSystem = calcPoliticalSystem.system;
+
   }
 
   processYear() {
@@ -55,49 +62,257 @@ class Faction {
     return 'market';
   }
 
-  getPoliticalSystem() {
-    let politicalSystem = '';
-    if(this.ethics['libertarian'].active) {
-      if(this.ethics['libertarian'].extreme) {
-        politicalSystem = 'anarchy';
-      } else {
-        politicalSystem = 'democracy';
-      }
+  getAnarchyPolicalSystem() {
+    if(this.ethics['libertarian'].extreme && this.ethics['communal'].active) {
+      return 'Anarchical Comune';
+    } else if(this.ethics['spiritualist'].active) {
+      return 'Decentralised Missionaries';
+    } else if(this.ethics['xenophobe'].active) {
+      return 'Decentralised Isoaltionists';
+    } else if(this.ethics['militarist'].active) {
+      return 'Militant Anarchy';
+    }
+    return 'Anarchy';
+  }
+
+  generateNationName(names) {
+    // 50/50 of or ajective
+    if(Math.random() > 0.5) {
+      const nationBaseName = this.baseNames[Math.floor(Math.random() * this.baseNames.length)];
+      return names[Math.floor(Math.random() * names.length)] + ' of ' + nationBaseName;
+    } else {
+      const nationBaseName = this.baseNamesAdjectives[Math.floor(Math.random() * this.baseNamesAdjectives.length)];
+      return nationBaseName + ' ' + names[Math.floor(Math.random() * names.length)];
+    }
+  }
+
+  getAnarchyNames() {
+    if(this.ethics['libertarian'].extreme && this.ethics['communal'].active) {
+      return ['Free Comune', 'Peoples Comune'];
+    } else if(this.ethics['spiritualist'].active) {
+      return ['Free Missionaries', 'Free Church'];
+    } else if(this.ethics['xenophobe'].active) {
+      return ['Independent Lands', 'Independent People', 'Sovereign Lands', 'Sovereign People'];
+    } else if(this.ethics['militarist'].active) {
+      return ['Free Warriors', 'Free Army', 'Free Militia'];
+    }
+    return ['Free Lands', 'Free People', 'Free Territories'];
+  }
+
+  getAuthoritarianPoliticalSystem() {
+    if(this.ethics['authoritarian'].extreme && this.ethics['communal'].active) {
+      return 'Fascism';
+    } else if(this.ethics['authoritarian'].extreme && this.ethics['individual'].active) {
+      return 'Despotism';
+    } else if(this.ethics['authoritarian'].extreme) {
+      return 'Totalitarian Regime';
     } else if(this.ethics['communal'].active) {
-      if(this.ethics['communal'].extreme) {
-        politicalSystem = 'socialist party state';
-      } else {
-        politicalSystem = 'socialist republic';
+      if(this.ethics['spiritualist'].active) {
+        return 'Theocracy';
+      } else if(this.ethics['xenophobe'].active) {
+        return 'Nazism';
+      } else if(this.ethics['militarist'].active) {
+        return 'Fascism';
       }
     } else if(this.ethics['individual'].active) {
-      if(this.ethics['individual'].extreme) {
-        politicalSystem = 'direct-democracy';
-      } else {
-        politicalSystem = 'republic';
-      }
-    } else if(this.ethics['authoritarian'].active) {
-      if(this.ethics['authoritarian'].extreme) {
-        politicalSystem = 'dictatorship';
-      } else {
-        politicalSystem = 'autocracy';
+      if(this.ethics['spiritualist'].active) {
+        return 'Theocratic Order';
+      } else if (this.ethics['xenophobe'].active) {
+        return 'Isolationist Tyranny';
+      } else if(this.ethics['militarist'].active) {
+        return 'Expansionist Oligarchy';
       }
     }
+    return 'Dictatorship';
+  }
 
-    if(this.ethics['xenophobe'].extreme) {
-      politicalSystem = 'isolationist ' + politicalSystem;
+  getAuthoritarianNames() {
+    if(this.ethics['spiritualist'].active) {
+      return ['Holy Empire', 'Holy Order', 'Holy State', 'Divine Empire', 'Divine Order', 'Divine State', 'Divine Mandate'];
     }
-    if(this.ethics['pacifist'].active) {
-      politicalSystem = 'peaceful ' + politicalSystem;
+    return ['Authority', 'Autarchy', 'Mandate', 'Regime', 'Rule', 'State', 'Dictate'];
+  }
+
+  getDemocracyPoliticalSystem() {
+    if(this.ethics['individual'].extreme && this.ethics['libertarian'].active) {
+      return 'Direct Democracy';
+    } else if(this.ethics['individual'].extreme) {
+      if(this.ethics['spiritualist'].active) {
+        return 'Religious Democracy';
+      } else if(this.ethics['xenophobe'].active) {
+        return 'Isolationist Democracy';
+      } else if(this.ethics['militarist'].active) {
+        return 'Democratic Crusaders';
+      }
+    } else {
+      if(this.ethics['spiritualist'].active) {
+        return 'Religious Republic';
+      } else if(this.ethics['xenophobe'].active) {
+        return 'Isolationist Democracy';
+      } else if(this.ethics['militarist'].active) {
+        return 'Democratic Crusaders';
+      }
+    }
+    return 'Democracy';
+  }
+
+  getDemocracyNames() {
+    let names = ['Republic', 'Democracy', 'Federation', 'Union', 'Alliance', 'Confederation', 'Commonwealth'];
+    if(this.ethics['spiritualist'].active) {
+      let spiritualNames = []
+      names.forEach(n => {
+        spiritualNames.push('Holy ' + n);
+        spiritualNames.push('Divine ' + n);
+        spiritualNames.push('Pious ' + n);
+      });
+      return spiritualNames;
+    } else if(this.ethics['xenophobe'].active) {
+      let xenophobeNames = []
+      names.forEach(n => {
+        xenophobeNames.push('Independent ' + n);
+        xenophobeNames.push('Sovereign ' + n);
+        xenophobeNames.push('Protected ' + n);
+      });
+      return xenophobeNames;
+    }
+    return names;
+  }
+
+  getSocialistPoliticalSystem() {
+    if(this.ethics['communal'].extreme && this.ethics['authoritarian'].active) {
+      return 'Socialist Soviet Republic';
+    } else if(this.ethics['communal'].extreme && this.ethics['libertarian'].active) {
+      return 'Socialist Comune';
+    } else if(this.ethics['communal'].extreme) {
+      if(this.ethics['spiritualist'].active) {
+        return 'Religious Comune';
+      } else if(this.ethics['xenophobe'].active) {
+        return 'Isolationist Socialism';
+      } else if(this.ethics['militarist'].active) {
+        return 'War Communism';
+      } else {
+        return 'Socialist State';
+      }
+    } else if(this.ethics['communal'].active) {
+      if(this.ethics['spiritualist'].active) {
+        return 'Monastery State';
+      } else if(this.ethics['xenophobe'].active) {
+        return 'Isolationist Comune';
+      } else if(this.ethics['militarist'].active) {
+        return 'War Socialism';
+      } else {
+        return 'Socialist Republic';
+      }
+    }
+    return 'Socialist';
+  }
+
+  getSocialistNames() {
+    let names = ['Socialist Republic', 'Socialist State',  'Democratic Peoples Republic', 'Peoples Republic', 'Comune', 'Soviet Republic', 'Socialism', 'Collective', 'Union'];
+    if(this.ethics['spiritualist'].active) {
+      let spiritualNames = []
+      names.forEach(n => {
+        spiritualNames.push('Monastery ' + n);
+        spiritualNames.push('Religious ' + n);
+        spiritualNames.push('Pious ' + n);
+        spiritualNames.push('Holy ' + n);
+      });
+      return spiritualNames;
+    }
+    return names;
+  }
+
+  getCouncilPoliticalSystem() {
+    if(this.ethics['spiritualist'].active) {
+      return 'Clerical Council';
+    } else if(this.ethics['xenophobe'].active) {
+      return 'Purity Council';
     } else if(this.ethics['militarist'].active) {
-      politicalSystem = 'militant ' + politicalSystem;
+      return 'War Council';
     }
-    if(this.ethics['spiritualist'].extreme) {
-      politicalSystem = 'theocratic ' + politicalSystem;
-    } else if(this.ethics['materialist'].extreme) {
-      politicalSystem = 'technocratic ' + politicalSystem;
+    return 'Council';
+  }
+
+  getCouncilNames() {
+    return [this.getCouncilPoliticalSystem()];
+  }
+
+  getPoliticalSystem() {
+    let politicalSystemType = '';
+    let politicalSystem = '';
+    let possibleFactionName = '';
+
+    if(this.ethics['libertarian'].extreme) {
+      politicalSystemType = 'anarchy';
+      politicalSystem = this.getAnarchyPolicalSystem();
+      possibleFactionName = this.generateNationName(this.getAnarchyNames());
+
+    } else if(this.ethics['communal'].extreme) {
+      politicalSystemType = 'socialism';
+      politicalSystem = this.getSocialistPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getSocialistNames());
+
+    } else if(this.ethics['authoritarian'].active) {
+      politicalSystemType = 'dictatorship';
+      politicalSystem = this.getAuthoritarianPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getAuthoritarianNames());
+
+    } else if(this.ethics['individual'].extreme) {
+      politicalSystemType = 'democracy';
+      politicalSystem = this.getDemocracyPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getDemocracyNames());
+
+    } else if(this.ethics['libertarian'].active && this.ethics['individual'].active) {
+      politicalSystemType = 'anarchy';
+      politicalSystem = this.getAnarchyPolicalSystem();
+      possibleFactionName = this.generateNationName(this.getAnarchyNames());
+
+    } else if(this.ethics['authoritarian'].active && this.ethics['individual'].active) {
+      politicalSystemType = 'dictatorship';
+      politicalSystem = this.getAuthoritarianPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getAuthoritarianNames());
+
+    } else if(this.ethics['authoritarian'].active && this.ethics['communal'].active) {
+      politicalSystemType = 'dictatorship';
+      politicalSystem = this.getAuthoritarianPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getAuthoritarianNames());
+
+    } else if(this.ethics['libertarian'].active && this.ethics['communal'].active) {
+      politicalSystemType = 'socialism';
+      politicalSystem = this.getSocialistPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getSocialistNames());
+
+    } else if(this.ethics['libertarian'].active) {
+      politicalSystemType = 'anarchy';
+      politicalSystem = this.getAnarchyPolicalSystem();
+      possibleFactionName = this.generateNationName(this.getAnarchyNames());
+
+    } else if(this.ethics['authoritarian'].active) {
+      politicalSystemType = 'dictatorship';
+      politicalSystem = this.getAuthoritarianPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getAuthoritarianNames());
+
+    } else if(this.ethics['individual'].active) {
+      politicalSystemType = 'democracy';
+      politicalSystem = this.getDemocracyPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getDemocracyNames());
+
+    } else if(this.ethics['communal'].active) {
+      politicalSystemType = 'socialism';
+      politicalSystem = this.getSocialistPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getSocialistNames());
+
+    } else {
+      politicalSystemType = 'council';
+      politicalSystem = this.getCouncilPoliticalSystem();
+      possibleFactionName = this.generateNationName(this.getCouncilNames());
     }
 
-    return politicalSystem;
+    return {
+      type: politicalSystemType,
+      system: politicalSystem,
+      name: possibleFactionName
+    };
   }
 
   growTerritory() {

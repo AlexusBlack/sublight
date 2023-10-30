@@ -41,7 +41,8 @@ const theGalaxy = new Galaxy();
   const usaFaction = new Faction(theEarth.id, 'USA', 220200, 3000000, usaEthics, {
     'formal': 100, 'natural': 100, 'social': 100, 'applied': 100
   }, null);
-
+  usaFaction.baseNames = ['USA', 'United States', 'America', 'US', 'North America'];
+  usaFaction.baseNamesAdjectives = ['American', 'US', 'North American'];
   theEarth.cls.factions.push(usaFaction);
 
   const ussrEthics = new Ethics();
@@ -51,6 +52,8 @@ const theGalaxy = new Galaxy();
   const ussrFaction = new Faction(theEarth.id, 'USSR', 257800, 22400000, ussrEthics, {
     'formal': 80, 'natural': 80, 'social': 80, 'applied': 80
   }, null);
+  ussrFaction.baseNames = ['Soviet Union', 'Russia', 'Soviet'];
+  ussrFaction.baseNamesAdjectives = ['Soviet', 'Russian'];
   theEarth.cls.factions.push(ussrFaction);
 
   const chinaEthics = new Ethics();
@@ -60,6 +63,8 @@ const theGalaxy = new Galaxy();
   const chinaFaction = new Faction(theEarth.id, 'China', 916400, 9600000, chinaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, null);
+  chinaFaction.baseNames = ['China', 'Han', 'Zhongguo'];
+  chinaFaction.baseNamesAdjectives = ['Chinese', 'Han'];
   theEarth.cls.factions.push(chinaFaction);
 
   const indiaEthics = new Ethics();
@@ -69,6 +74,8 @@ const theGalaxy = new Galaxy();
   const indiaFaction = new Faction(theEarth.id, 'India', 623500, 3287000, indiaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, null);
+  indiaFaction.baseNames = ['India', 'Hindustan', 'Bharat', 'Hindu'];
+  indiaFaction.baseNamesAdjectives = ['Indian', 'Hindu', 'Bharati'];
   theEarth.cls.factions.push(indiaFaction);
 
   const eecEthics = new Ethics();
@@ -78,6 +85,8 @@ const theGalaxy = new Galaxy();
   const eecFaction = new Faction(theEarth.id, 'European Economic Community', 676770, 4233000, eecEthics, {
     'formal': 20, 'natural': 20, 'social': 20, 'applied': 20
   }, null);
+  eecFaction.baseNames = ['European Community', 'European Union', 'Europe', 'France', 'Germany', 'Spain'];
+  eecFaction.baseNamesAdjectives = ['European', 'French', 'German', 'Spanish'];
   theEarth.cls.factions.push(eecFaction);
 
   const arabEthics = new Ethics();
@@ -87,6 +96,8 @@ const theGalaxy = new Galaxy();
   const arabFaction = new Faction(theEarth.id, 'Arab Nations', 160000, 13000000, arabEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, null);
+  arabFaction.baseNames = ['Arab Nations', 'Arab League', 'Arab', 'North Africa'];
+  arabFaction.baseNamesAdjectives = ['Arab', 'North African', 'Arabic'];
   theEarth.cls.factions.push(arabFaction);
 
   const japanEthics = new Ethics();
@@ -96,6 +107,8 @@ const theGalaxy = new Galaxy();
   const japanFaction = new Faction(theEarth.id, 'Japan', 111600, 377973, japanEthics, {
     'formal': 95, 'natural': 95, 'social': 95, 'applied': 95
   }, null);
+  japanFaction.baseNames = ['Japan', 'Nippon', 'Nihon'];
+  japanFaction.baseNamesAdjectives = ['Japanese', 'Nipponese', 'Nihonese'];
   theEarth.cls.factions.push(japanFaction);
 
   const southAmericaEthics = new Ethics();
@@ -105,6 +118,8 @@ const theGalaxy = new Galaxy();
   const southAmericaFaction = new Faction(theEarth.id, 'South America', 202000, 6878000, southAmericaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, null);
+  southAmericaFaction.baseNames = ['South America', 'Latin America', 'Brazil', 'Argentina'];
+  southAmericaFaction.baseNamesAdjectives = ['South American', 'Latin American', 'Brazilian', 'Argentinian'];
   theEarth.cls.factions.push(southAmericaFaction);
 
   const africaEthics = new Ethics();
@@ -114,6 +129,8 @@ const theGalaxy = new Galaxy();
   const africaFaction = new Faction(theEarth.id, 'Africa', 250000, 17000000, africaEthics, {
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, null);
+  africaFaction.baseNames = ['Africa', 'South Africa', 'Turkey', 'Egypt', 'Ethiopia', 'Nigeria'];
+  africaFaction.baseNamesAdjectives = ['African', 'South African', 'Turkish', 'Egyptian', 'Ethiopian', 'Nigerian'];
   theEarth.cls.factions.push(africaFaction);
 
   theEarth.cls.calculatePlanetaryTechLvl();

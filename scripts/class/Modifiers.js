@@ -52,6 +52,10 @@ class Modifiers {
   has(target, key) {
     return target.modifiers.some(modifier => modifier.key === key);
   }
+
+  hasAny(target, keys) {
+    return target.modifiers.some(modifier => keys.includes(modifier.key));
+  }
 }
 const theModifiers = new Modifiers();
 
