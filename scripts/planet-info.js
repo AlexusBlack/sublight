@@ -66,7 +66,7 @@
         ]
       };
       const config = {
-        type: 'pie',
+        type: 'pie', // doughnut
         data: data,
         options: {
           responsive: true,
@@ -119,6 +119,133 @@
       const canvas = document.createElement('canvas');
       chartBox.appendChild(canvas);
       new Chart(canvas, config);
+
+      const dataDiplomacy = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Strength',
+            data: labels.map(label => 1),
+            backgroundColor: ['#267365', '#F2CB05', '#F29F05', '#F28705', '#F23030', '#747F7F', '#72F2EB', '#FF4858', '#1B7F79']
+          }
+        ]
+      };
+
+      function drawLine(ctx, arc1, arc2, color) {
+        ctx.beginPath();
+        ctx.moveTo(arc1.x, arc1.y);
+        ctx.lineTo(arc2.x, arc2.y);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = color;
+        ctx.stroke();
+      }
+
+      function drawDiplomaticRelations(index, relation, color, ctx, factions, arcsCenterPoints) {
+        const faction = factions[index];
+        faction.diplomacy[relation].forEach(factionId => {
+          const factionIndex = factions.findIndex(faction => faction.id === factionId);
+          if(factionIndex === -1) return;
+
+          const arc1 = arcsCenterPoints[index];
+          const arc2 = arcsCenterPoints[factionIndex];
+
+          drawLine(ctx, arc1, arc2, color);
+        });
+      }
+
+      const diplomacyPlugin = {
+        id: 'diplomacy',
+        beforeDraw: function(chart, args, options) {
+          // Draw lines between doughnut chart segments
+          const ctx = chart.ctx;
+          const datasetMeta = chart.getDatasetMeta(0);
+
+          const arcsCenterPoints = datasetMeta.data.map(arc => arc.getCenterPoint());
+
+          factions.forEach((faction, index) => {
+            drawDiplomaticRelations(index, 'alliance', 'deepskyblue', ctx, factions, arcsCenterPoints);
+            drawDiplomaticRelations(index, 'rival', 'orange', ctx, factions, arcsCenterPoints);
+            drawDiplomaticRelations(index, 'war', 'red', ctx, factions, arcsCenterPoints);
+            drawDiplomaticRelations(index, 'protects', 'green', ctx, factions, arcsCenterPoints);
+            drawDiplomaticRelations(index, 'threatens', 'orange', ctx, factions, arcsCenterPoints);
+          });
+        },
+        afterDatasetsDraw: function(chart, args, options) {
+          const ctx = chart.ctx;
+          const datasetMeta = chart.getDatasetMeta(0);
+
+          const arcsCenterPoints = datasetMeta.data.map(arc => arc.getCenterPoint());
+          // draw faction names over center points
+          factions.forEach((faction, index) => {
+            let name = faction.name;
+            // if name is too long, show only capital letters
+            if(name.length > 10) {
+              name = name.split(' ').filter(word => word !== 'of').map(word => word[0]).join('');
+            }
+            const arc = arcsCenterPoints[index];
+            ctx.shadowColor="black";
+            ctx.shadowBlur=7;
+            ctx.fillStyle = 'white';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(name, arc.x, arc.y);
+            ctx.shadowBlur=0;
+          });
+        }
+      };
+      const configDiplomacy = {
+        type: 'doughnut',
+        plugins: [diplomacyPlugin],
+        data: dataDiplomacy,
+        options: {
+          responsive: true,
+          borderColor: '#333',
+          //borderWidth: 20,
+          borderRadius: 100,
+          spacing: 80,
+          borderJoinStyle: 'round',
+          plugins: {
+            legend: {
+              display: false,
+            },
+            title: {
+              display: true,
+              text: 'Diplomacy'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const index = context.dataIndex;
+                  const name = context.label;
+                  let alliance = factions[index].diplomacy.alliance.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+                  let rivalry = factions[index].diplomacy.rival.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+                  let war = factions[index].diplomacy.war.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+                  let protects = factions[index].diplomacy.protects.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+                  let protectedBy = factions[index].diplomacy.protectedBy.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+                  let threatens = factions[index].diplomacy.threatens.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+                  let threatenedBy = factions[index].diplomacy.threatenedBy.map(factionId => theGalaxy.factions[factionId].name).join(', ');
+
+                  const result = [];
+                  if(alliance) result.push(`Alliance: ${alliance}`);
+                  if(rivalry) result.push(`Rivalry: ${rivalry}`);
+                  if(war) result.push(`War: ${war}`);
+                  if(protects) result.push(`Protects: ${protects}`);
+                  if(protectedBy) result.push(`Protected by: ${protectedBy}`);
+                  if(threatens) result.push(`Threatens: ${threatens}`);
+                  if(threatenedBy) result.push(`Threatened by: ${threatenedBy}`);
+                  if(!result.length) result.push('No known diplomacy');
+                  return result;
+                }
+              }
+            }
+          },
+        },
+      };
+
+      const canvasDiplomacy = document.createElement('canvas');
+      chartBox.appendChild(canvasDiplomacy);
+      new Chart(canvasDiplomacy, configDiplomacy);
+
     } else {
       el.querySelector('.planet-info__geo-tab-btn').click();
     }

@@ -1,5 +1,9 @@
 class Faction {
+  static factionCounter = 0;
+
   constructor(planetId, name, population, territory, ethics, technology, diplomacy) {
+    this.id = Faction.factionCounter++;
+    theGalaxy.factions[this.id] = this;
     this.planetId = planetId;
     this.planet = theGalaxy.planets[planetId];
     this.name = name;
