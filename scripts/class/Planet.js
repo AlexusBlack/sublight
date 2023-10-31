@@ -11,6 +11,7 @@ class Planet {
     const validRivalries = this.getValidRivalries();
     const validThreatTargets = this.getValidThreatTargets();
     const validProtectionTargets = this.getValidProtectionTargets();
+    const validAlliances = this.getValidAlliances();
 
     this.factions.forEach(faction => {
       faction.diplomacy.rivaledBy = [];
@@ -39,8 +40,16 @@ class Planet {
         theGalaxy.factions[protectionTargetId].diplomacy.protectedBy.push(faction.id);
       });
 
-      // TODO: validate alliances
-      // TODO: establish new alliances if possible
+      // get first 2 alliances from available alliances list
+      faction.diplomacy.alliance = validAlliances[faction.id].length > 0 ? validAlliances[faction.id].slice(0, 2) : [];
+    });
+    // remove non mutial alliances
+    this.factions.forEach(faction => {
+      if(faction.diplomacy.alliance.length > 0) {
+        if(!theGalaxy.factions[faction.diplomacy.alliance[0]].diplomacy.alliance.includes(faction.id)) {
+          faction.diplomacy.alliance = [];
+        }
+      }
     });
   }
 
@@ -92,6 +101,21 @@ class Planet {
     return validProtectionTargets;
   }
 
+  getValidAlliances() {
+    const validAlliances = {};
+    // build list of possible alliances
+    this.factions.forEach(faction1 => {
+      if(!(faction1.id in validAlliances)) validAlliances[faction1.id] = [];
+      this.factions.forEach(faction2 => {
+        if(faction1.id !== faction2.id) {
+          if(this.isValidAlliance(faction1.id, faction2.id)) validAlliances[faction1.id].push(faction2.id);
+        }
+      });
+      // sort by faction strength, strongest first
+      validAlliances[faction1.id].sort((a, b) => theGalaxy.factions[b].strength - theGalaxy.factions[a].strength);
+    });
+    return validAlliances;
+  }
 
   isValidRivalry(faction1Id, faction2Id) {
     const faction1 = theGalaxy.factions[faction1Id];
@@ -99,7 +123,7 @@ class Planet {
     // both can't be democracy or socialism, as those don't rival each other
     if(['democracy', 'socialism'].includes(faction1.politicalSystemType) &&
       faction1.politicalSystemType === faction2.politicalSystemType) return false;
-    // strength difference can't be large than 30% of the weaker faction
+    // strength difference can't be large than 50%
     const strengthDifference = Math.abs(faction1.strength - faction2.strength);
     const weakerStrength = Math.min(faction1.strength, faction2.strength);
     if(strengthDifference > weakerStrength * 0.5) return false;
@@ -125,6 +149,20 @@ class Planet {
     // target must be of same political system type and can't be stronger than 15% of the protecting faction
     if(faction1.politicalSystemType !== faction2.politicalSystemType) return false;
     if(faction2.strength > faction1.strength * 0.20) return false;
+    return true;
+  }
+
+  isValidAlliance(faction1Id, faction2Id) {
+    const faction1 = theGalaxy.factions[faction1Id];
+    const faction2 = theGalaxy.factions[faction2Id];
+    // dictatorships don't ally and can't be allied, unless they have exactly same political system
+    if((faction1.politicalSystemType === 'dictatorship' || faction2.politicalSystemType === 'dictatorship') &&
+      faction1.politicalSystem !== faction2.politicalSystem) return false;
+    // target must be of same political system type and strength difference can't be larger than 50% of the weaker faction
+    if(faction1.politicalSystemType !== faction2.politicalSystemType) return false;
+    const strengthDifference = Math.abs(faction1.strength - faction2.strength);
+    const strongerNationStrength = Math.max(faction1.strength, faction2.strength);
+    if(strengthDifference > strongerNationStrength * 0.7) return false;
     return true;
   }
 

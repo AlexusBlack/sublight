@@ -9,5 +9,6 @@
 }
 
 .planet-info__factions-chart-box {
-  max-width: 350px;
+  max-width: 70%;
+  margin: 0 auto;
 }

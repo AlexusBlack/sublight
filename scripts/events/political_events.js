@@ -134,9 +134,8 @@ politicalConflictEvent.actions_func = function(faction) {
     //console.log(`Small revolt in <${faction.name}>`, newEthicalSystem);
     faction.history.push({year: theTime.year, month: theTime.month, category: 'political_conflict_revolt_' + theTime.year,  record: `Political instability leads to a small revolt with demand for nation to become more ${ethicChange}.`});
     theModifiers.add(faction, 'political_recent_revolt');
-    // TODO: implement revolts
+    faction.splitFactions([0.1*getRandomArbitrary(0.5, 1.5)], [newEthicalSystem]);
   } else {
-    // TODO: implement political reform
     faction.ethicalSystem = newEthicalSystem;
     faction.ethics = newEthicalSystem.ethics;
     theModifiers.add(faction, 'political_recent_reform');

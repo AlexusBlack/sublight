@@ -4,6 +4,7 @@ class Faction {
   constructor(planetId, name, population, territory, ethics, technology, diplomacy) {
     this.id = Faction.factionCounter++;
     theGalaxy.factions[this.id] = this;
+    this.isDead = false;
     this.planetId = planetId;
     this.planet = theGalaxy.planets[planetId];
     this.name = name;
@@ -15,7 +16,8 @@ class Faction {
     this.diplomacy = diplomacy;
     this.baseNames = [];
     this.baseNamesAdjectives = [];
-    this.fractionNames = [];
+    this.partNames = [];
+    this.partNamesAdjectives = [];
 
     this.triggeredEvents = {};
     this.modifiers = [];
@@ -32,7 +34,7 @@ class Faction {
 
     this.economicalSystem = this.getEconomicalSystem();
 
-    let calcPoliticalSystem = this.getPoliticalSystem();
+    const calcPoliticalSystem = this.getPoliticalSystem();
     this.politicalSystemType = calcPoliticalSystem.type;
     this.politicalSystem = calcPoliticalSystem.system;
 
@@ -53,6 +55,83 @@ class Faction {
     this.populationGroups = this.calculatePopulationGroups();
 
     this.calculateStrength();
+  }
+
+  kill() {
+    this.isDead = true;
+    // remove source faction from planet factions
+    this.planet.cls.factions = this.planet.cls.factions.filter(f => f.id !== this.id);
+  }
+
+  annexFaction(faction, gently=false) { // gently if integration
+    // add source population to target
+    this.population += faction.population;
+    // add source territory to target
+    this.territory += faction.territory;
+    // add source partNames and partNamesAdjectives
+    this.partNames = this.baseNames.concat(faction.partNames);
+    this.partNamesAdjectives = this.baseNamesAdjectives.concat(faction.partNamesAdjectives);
+    // mark source faction as dead
+    faction.kill()
+    this.history.push({year: theTime.year, month: theTime.month, category: 'faction_annexed_' + theTime.year,  record: `The nation ${gently ? 'integrated':'annexed'} former nation known as ${faction.name}. Their people will now be working for the benefit of the nation.`});
+  }
+
+  integrateFaction(faction) {
+    this.annexFaction(faction, true);
+  }
+
+  partitionFaction() {
+    // split current faction population, territory and names between all threatenedBy factions equally
+    let threatenedBy = this.diplomacy.threatenedBy.map(factionId => theGalaxy.factions[factionId]);
+    const partsNumber = threatenedBy.length;
+    if(partsNumber === 0) return;
+    const partPopulation = Math.floor(this.population / partsNumber);
+    const partTerritory = Math.floor(this.territory / partsNumber);
+    const namesPerPartNumber = Math.floor(this.baseNames.length / partsNumber);
+    const adjectivesPerPartNumber = Math.floor(this.baseNamesAdjectives.length / partsNumber);
+
+    threatenedBy.forEach((faction, index) => {
+      faction.population += partPopulation;
+      faction.territory += partTerritory;
+      const namesPart = this.baseNames.splice(index * namesPerPartNumber, namesPerPartNumber);
+      const namesAdjectivesPart = this.baseNamesAdjectives.splice(index * adjectivesPerPartNumber, adjectivesPerPartNumber);
+      faction.partNames = faction.baseNames.concat(namesPart);
+      faction.partNamesAdjectives = faction.baseNamesAdjectives.concat(namesAdjectivesPart);
+      faction.history.push({year: theTime.year, month: theTime.month, category: 'faction_partition_paticipated_' + theTime.year,  record: `The nation participated in partition of former nation known as ${this.name}. They became too weak to rule themselves.`});
+    });
+    this.kill();
+  }
+
+  splitFactions(parts, ethics = []) {
+    // sum of parts can't be more than 1
+    const sumOfParts = parts.reduce((a, b) => a + b, 0);
+    if(sumOfParts > 1) return;
+    const leftOver = 1 - sumOfParts;
+    parts.forEach((part, index) => {
+      let newEthics = new Ethics();
+      if(ethics[index] === undefined) {
+        newEthics.ethics = Object.assign({}, this.ethics);
+        newEthics.driftRandom();
+      } else {
+        newEthics = ethics[index];
+      }
+      const newFaction = new Faction(this.planetId, 'New Faction', Math.floor(this.population * part), Math.floor(this.territory * part), newEthics, Object.assign({}, this.technology), {'alliance':[], 'rival':[], 'rivaledBy':[], 'war':[], 'protects':[], 'protectedBy':[], 'threatens':[], 'threatenedBy':[]});
+      newFaction.baseNames = [this.partNames.length > 1 ? this.partNames.shift() : this.partNames[0]];
+      newFaction.baseNamesAdjectives = [this.partNamesAdjectives.length > 1 ? this.partNamesAdjectives.shift() : this.partNamesAdjectives[0]];
+      newFaction.partNames = newFaction.baseNames[0];
+      newFaction.partNamesAdjectives = newFaction.baseNamesAdjectives[0];
+      const newPoliticalSystem = newFaction.getPoliticalSystem();
+      newFaction.name = newPoliticalSystem.name;
+      newFaction.politicalSystemType = newPoliticalSystem.type;
+      newFaction.politicalSystem = newPoliticalSystem.system;
+      this.planet.cls.factions.push(newFaction);
+    });
+    if(leftOver > 0.01) {
+      this.population *= leftOver;
+      this.territory *= leftOver;
+    } else {
+      this.kill();
+    }
   }
 
   getEconomicalSystem() {

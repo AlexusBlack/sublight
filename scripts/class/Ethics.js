@@ -59,6 +59,15 @@ class Ethics {
     return ethicToIncrease;
   }
 
+  driftRandom() {
+    let increasedEthic = this.increaseRandomEthic([]);
+    if(this.calculateValue() < 3) {
+      this.increaseRandomEthic([increasedEthic, Ethics.ethics_and_opposites[increasedEthic]]);
+    } else if(this.calculateValue() > 3) {
+      this.decreaseRandomEthic([increasedEthic, Ethics.ethics_and_opposites[increasedEthic]]);
+    }
+  }
+
   increaseEthic(ethic) {
     // check if opposite ethic is active
     const oppositeEthic = Ethics.ethics_and_opposites[ethic];
