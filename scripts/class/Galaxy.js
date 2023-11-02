@@ -18,6 +18,10 @@ class Galaxy {
 
   }
 
+  process1Years() {
+    this.inhabitedPlanets.forEach(planet => planet.process1Years());
+  }
+
   process5Years() {
     this.inhabitedPlanets.forEach(planet => planet.process5Years());
   }
@@ -28,6 +32,7 @@ const theGalaxy = new Galaxy();
   await theGalaxy.loadGalaxy();
 
   theTime.call1month.push(() => theGalaxy.process1Month());
+  theTime.call1years.push(() => theGalaxy.process1Years());
   theTime.call5years.push(() => theGalaxy.process5Years());
 
   const theEarth = theGalaxy.planets.filter(p => p.name == 'Earth')[0];
@@ -144,6 +149,7 @@ const theGalaxy = new Galaxy();
   japanFaction.baseNames = ['Japan', 'Nippon', 'Nihon'];
   japanFaction.baseNamesAdjectives = ['Japanese', 'Nipponese', 'Nihonese'];
   japanFaction.partNames = ['Japan', 'Hokkaido', 'Honshu', 'Shikoku', 'Kyushu'];
+  japanFaction.partNamesAdjectives = ['Japanese', 'Hokkaido', 'Honshu', 'Shikoku', 'Kyushu'];
   theEarth.cls.factions.push(japanFaction);
 
   // ID: 7

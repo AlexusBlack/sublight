@@ -1,3 +1,9 @@
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}
+
 function getRandomArbitrary(min, max) {
   return Math.random() * (max - min) + min;
 }
@@ -37,5 +43,14 @@ function weightedRandom(items, weights) {
         index: itemIndex,
       };
     }
+  }
+}
+
+function weightedRand2(spec) {
+  // TODO: normalise weights
+  var i, sum=0, r=Math.random();
+  for(const [key, value] of Object.entries(spec)) {
+    sum += value;
+    if (r <= sum) return key;
   }
 }

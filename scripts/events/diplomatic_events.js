@@ -1,6 +1,6 @@
 /* =========== INTEGRATION & ANNEXATION =========== */
 const integrationOrAnnexationEvent = new Event('diplomatic_integration_or_annexation', 'faction');
-integrationOrAnnexationEvent.mean_months_to_happen = 12;
+integrationOrAnnexationEvent.mean_months_to_happen = 6;
 function isIntegrationTarget(faction) {
   // Nation has no allies
   if(faction.diplomacy.alliance.length > 0) return false;

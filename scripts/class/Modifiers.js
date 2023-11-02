@@ -60,11 +60,11 @@ class Modifiers {
 const theModifiers = new Modifiers();
 
 class Modifier {
-  constructor(key) {
+  constructor(key, durationMonths=0) {
     this.name = key;
     this.description = key;
     this.key = key;
-    this.durationMonths = 0;
+    this.durationMonths = durationMonths;
     this.effects = [];
 
     theModifiers.modifierTypes[key] = this;

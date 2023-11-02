@@ -38,6 +38,8 @@ class Faction {
     this.politicalSystemType = calcPoliticalSystem.type;
     this.politicalSystem = calcPoliticalSystem.system;
 
+    this.warExaustion = 0; // 1 is max
+    this.wantsToEndWar = false;
   }
 
   processYear() {
@@ -63,14 +65,49 @@ class Faction {
     this.planet.cls.factions = this.planet.cls.factions.filter(f => f.id !== this.id);
   }
 
+  calculateFullMilitaryStrength() {
+    let militaryStrength = this.militaryStrength;
+    // Add allies as 0.5 of their strength
+    militaryStrength += this.diplomacy.alliance.reduce((acc, ally) => acc + theGalaxy.factions[ally].militaryStrength * 0.5, 0);
+    // Add protectedBy as 0.1 of their strength
+    militaryStrength += this.diplomacy.protectedBy.reduce((acc, ally) => acc + theGalaxy.factions[ally].militaryStrength * 0.1, 0);
+    // decrease based on war exaustion
+    militaryStrength *= 1 - this.warExaustion;
+    return militaryStrength;
+  }
+
+  changeEthicalSystem(newEthicalSystem) {
+    const faction = this;
+    faction.ethicalSystem = newEthicalSystem;
+    faction.ethics = newEthicalSystem.ethics;
+    theModifiers.add(faction, 'political_recent_reform');
+
+    const newEconomicSystem = faction.getEconomicalSystem();
+    if(faction.economicalSystem !== newEconomicSystem) {
+      faction.economicalSystem = newEconomicSystem;
+      faction.history.push({year: theTime.year, month: theTime.month, category: 'economic_reform_' + theTime.year,  record: `Recent political changes resulted in change of economical system to ${newEconomicSystem}.`});
+    }
+    const newPoliticalSystem = faction.getPoliticalSystem();
+    if(faction.politicalSystem !== newPoliticalSystem.system) {
+      faction.history.push({year: theTime.year, month: theTime.month, category: 'political_reform_' + theTime.year,  record: `To resolve recent political conflict the state polical system was reorganised into ${newPoliticalSystem.system} (${newPoliticalSystem.type}).`});
+      if(faction.politicalSystemType !== newPoliticalSystem.type) {
+        faction.name = newPoliticalSystem.name;
+        faction.history.push({year: theTime.year, month: theTime.month, category: 'faction_name_change_' + theTime.year,  record: `To reflect the new political system the nation changed its name to ${newPoliticalSystem.name}.`});
+      }
+      faction.politicalSystemType = newPoliticalSystem.type;
+      faction.politicalSystem = newPoliticalSystem.system;
+    }
+  }
+
   annexFaction(faction, gently=false) { // gently if integration
     // add source population to target
     this.population += faction.population;
     // add source territory to target
     this.territory += faction.territory;
     // add source partNames and partNamesAdjectives
-    this.partNames = this.baseNames.concat(faction.partNames);
-    this.partNamesAdjectives = this.baseNamesAdjectives.concat(faction.partNamesAdjectives);
+    // we are removing duplicate parts at annexation to prevent breeding of same parts
+    this.partNames = [...new Set(this.baseNames.concat(faction.partNames))];
+    this.partNamesAdjectives = [...new Set(this.baseNamesAdjectives.concat(faction.partNamesAdjectives))];
     // mark source faction as dead
     faction.kill()
     this.history.push({year: theTime.year, month: theTime.month, category: 'faction_annexed_' + theTime.year,  record: `The nation ${gently ? 'integrated':'annexed'} former nation known as ${faction.name}. Their people will now be working for the benefit of the nation.`});
@@ -107,6 +144,9 @@ class Faction {
     const sumOfParts = parts.reduce((a, b) => a + b, 0);
     if(sumOfParts > 1) return;
     const leftOver = 1 - sumOfParts;
+    const partNames = [...this.partNames];
+    const partNamesAdjectives = [...this.partNamesAdjectives];
+
     parts.forEach((part, index) => {
       let newEthics = new Ethics();
       if(ethics[index] === undefined) {
@@ -116,15 +156,18 @@ class Faction {
         newEthics = ethics[index];
       }
       const newFaction = new Faction(this.planetId, 'New Faction', Math.floor(this.population * part), Math.floor(this.territory * part), newEthics, Object.assign({}, this.technology), {'alliance':[], 'rival':[], 'rivaledBy':[], 'war':[], 'protects':[], 'protectedBy':[], 'threatens':[], 'threatenedBy':[]});
-      newFaction.baseNames = [this.partNames.length > 1 ? this.partNames.shift() : this.partNames[0]];
-      newFaction.baseNamesAdjectives = [this.partNamesAdjectives.length > 1 ? this.partNamesAdjectives.shift() : this.partNamesAdjectives[0]];
-      newFaction.partNames = newFaction.baseNames[0];
-      newFaction.partNamesAdjectives = newFaction.baseNamesAdjectives[0];
+      newFaction.baseNames = [partNames[Math.floor(Math.random() * partNames.length)]];
+      if(newFaction.baseNames[0] === undefined) debugger;
+      newFaction.baseNamesAdjectives = [partNamesAdjectives[Math.floor(Math.random() * partNamesAdjectives.length)]];
+      if(newFaction.baseNamesAdjectives[0] === undefined) debugger;
+      newFaction.partNames = [newFaction.baseNames[0]];
+      newFaction.partNamesAdjectives = [newFaction.baseNamesAdjectives[0]];
       const newPoliticalSystem = newFaction.getPoliticalSystem();
       newFaction.name = newPoliticalSystem.name;
       newFaction.politicalSystemType = newPoliticalSystem.type;
       newFaction.politicalSystem = newPoliticalSystem.system;
       this.planet.cls.factions.push(newFaction);
+      newFaction.history.push({year: theTime.year, month: theTime.month, category: 'political_faction_revolted_' + theTime.year,  record: `The nation declared independence from ${this.name}, it will go it's own way now. Citizens of the new nation look into their future with optimism.`});
     });
     if(leftOver > 0.01) {
       this.population *= leftOver;

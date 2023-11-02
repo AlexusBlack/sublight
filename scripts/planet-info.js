@@ -165,9 +165,9 @@
           factions.forEach((faction, index) => {
             drawDiplomaticRelations(index, 'alliance', 'deepskyblue', ctx, factions, arcsCenterPoints);
             drawDiplomaticRelations(index, 'rival', 'orange', ctx, factions, arcsCenterPoints);
-            drawDiplomaticRelations(index, 'war', 'red', ctx, factions, arcsCenterPoints);
             drawDiplomaticRelations(index, 'protects', 'green', ctx, factions, arcsCenterPoints);
             drawDiplomaticRelations(index, 'threatens', 'yellow', ctx, factions, arcsCenterPoints);
+            drawDiplomaticRelations(index, 'war', 'red', ctx, factions, arcsCenterPoints);
           });
         },
         afterDatasetsDraw: function(chart, args, options) {
@@ -199,11 +199,12 @@
         data: dataDiplomacy,
         options: {
           responsive: true,
+          backgroundColor: '#333',
           borderColor: '#333',
           //borderWidth: 20,
           borderRadius: 100,
-          spacing: 80,
-          borderJoinStyle: 'round',
+          spacing: 400 / factions.length,//80,
+          //borderJoinStyle: 'round',
           plugins: {
             legend: {
               display: false,

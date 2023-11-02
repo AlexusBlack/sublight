@@ -97,17 +97,21 @@ politicalCycleEvent.actions_func = function(faction) {
 const politicalConflictEvent = new Event('political_conflict', 'faction');
 politicalConflictEvent.mean_months_to_happen = 3;
 politicalConflictEvent.trigger_func = function(faction) {
-  return theModifiers.has(faction, 'political_cycle_conflict') && !theModifiers.hasAny(faction, ['political_recent_reform', 'political_recent_revolt']);
+  return theModifiers.has(faction, 'political_cycle_conflict') && !theModifiers.hasAny(faction, ['political_recent_reform', 'political_recent_collapse', 'political_recent_revolt', 'political_crisis_averted', 'political_recent_collapse']);
 };
 
 politicalConflictEvent.actions_func = function(faction) {
-  const politicalConflictSituations = {
-    'small_revolt': 0.05,
-    'nothing_happens': 0.15, // dumb luck
-    'political_reform': 0.8
+  const situations = {
+    'political_reform': 0.13,
+    'small_revolt': 0.02,
+    'nothing_happens': 0.85, // dumb luck
   };
-  const situation = weightedRandom(Object.keys(politicalConflictSituations), Object.values(politicalConflictSituations)).item;
-  if(situation === 'nothing_happens') return;
+  //const situation = weightedRandom(Object.keys(situations), Object.values(situations)).item;
+  const situation = weightedRand2(situations);
+  if(situation === 'nothing_happens') {
+    theModifiers.add(faction, 'political_crisis_averted');
+    return;
+  }
   // calculate reform/revolt ethics
   const possibleEthicChange = {
     'authoritarian': 0.3,
@@ -136,25 +140,115 @@ politicalConflictEvent.actions_func = function(faction) {
     theModifiers.add(faction, 'political_recent_revolt');
     faction.splitFactions([0.1*getRandomArbitrary(0.5, 1.5)], [newEthicalSystem]);
   } else {
-    faction.ethicalSystem = newEthicalSystem;
-    faction.ethics = newEthicalSystem.ethics;
-    theModifiers.add(faction, 'political_recent_reform');
+    faction.changeEthicalSystem(newEthicalSystem);
     faction.history.push({year: theTime.year, month: theTime.month, category: 'political_conflict_reform_' + theTime.year,  record: `Political instability leads to a political reform that makes nation more ${ethicChange}.` + (otherEthicChange !== '' ? ` As a side effect the nation became ${otherEthicChange}.` : '')});
+  }
+};
 
-    const newEconomicSystem = faction.getEconomicalSystem();
-    if(faction.economicalSystem !== newEconomicSystem) {
-      faction.economicalSystem = newEconomicSystem;
-      faction.history.push({year: theTime.year, month: theTime.month, category: 'economic_reform_' + theTime.year,  record: `Recent political changes resulted in change of economical system to ${newEconomicSystem}.`});
+/* =========== POLITICAL CRISIS =========== */
+const politicalCrisisEvent = new Event('political_crisis', 'faction');
+politicalCrisisEvent.mean_months_to_happen = 3;
+politicalCrisisEvent.trigger_func = function(faction) {
+  return theModifiers.has(faction, 'political_cycle_crisis') && !theModifiers.hasAny(faction, ['political_recent_reform', 'political_recent_collapse', 'political_recent_revolt', 'political_crisis_averted', 'political_recent_collapse']);
+};
+
+politicalCrisisEvent.actions_func = function(faction) {
+  let situations = {
+    'nothing_happens': 0.80, // dumb luck
+    'political_coup': 0.1,
+    'revolution': 0.08,
+    'collapse': 0.02
+  };
+  let total_factions_strength = faction.planet.cls.factions.reduce((acc, f) => acc + f.strength, 0);
+  // If planet has only one faction, there is a higher chance of collapse due to small number of options
+  // If the faction got too strong it's volatility increasing as well as people want to challenge authority
+  if(faction.planet.cls.factions.length < 3 || faction.strength > total_factions_strength * 0.6) {
+    situations = {
+      'nothing_happens': 0.50, // dumb luck
+      'political_coup': 0.10,
+      'revolution': 0.20,
+      'collapse': 0.20
+    };
+  }
+  //const situation = weightedRandom(Object.keys(situations), Object.values(situations)).item;
+  const situation = weightedRand2(situations);
+  if(situation === 'nothing_happens') {
+    theModifiers.add(faction, 'political_crisis_averted');
+    return;
+  }
+
+  const newEthicalSystem = new Ethics();
+  let options = {'council': 1};
+  if(faction.politicalSystemType === 'anarchy') {
+    options = {
+      'democracy': 0.25,
+      'socialism': 0.25,
+      'dictatorship': 0.5
+    };
+  } else if(faction.politicalSystemType === 'democracy') {
+    options = {
+      'socialism': 0.60,
+      'dictatorship': 0.40
+    };
+  } else if(faction.politicalSystemType === 'socialism') {
+    options = {
+      'democracy': 0.30,
+      'dictatorship': 0.70
+    };
+  } else if(faction.politicalSystemType === 'dictatorship') {
+    options = {
+      'democracy': 0.25,
+      'anarchy': 0.75,
+    };
+  }
+  let newPoliticalSystemType = weightedRandom(Object.keys(options), Object.values(options)).item;
+  if(newPoliticalSystemType === 'democracy') {
+    newEthicalSystem.increaseEthic('individual');
+    newEthicalSystem.increaseEthic('pacifist');
+    newEthicalSystem.increaseEthic('xenophile');
+  } else if(newPoliticalSystemType === 'socialism') {
+    newEthicalSystem.increaseEthic('communal');
+    newEthicalSystem.increaseEthic('communal');
+    newEthicalSystem.increaseEthic('authoritarian');
+  } else if(newPoliticalSystemType === 'dictatorship') {
+    newEthicalSystem.increaseEthic('authoritarian');
+    newEthicalSystem.increaseEthic('authoritarian');
+    newEthicalSystem.increaseEthic('individual');
+  } else if(newPoliticalSystemType === 'anarchy') {
+    newEthicalSystem.increaseEthic('individual');
+    newEthicalSystem.increaseEthic('individual');
+    newEthicalSystem.increaseEthic('pacifist');
+  }
+
+  if(situation === 'political_coup') {
+    faction.changeEthicalSystem(newEthicalSystem);
+    theModifiers.add(faction, 'political_recent_coup');
+
+  } else if(situation === 'revolution') {
+    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_crisis_revolution_' + theTime.year,  record: `Political instability leads to a revolution with demand for nation to become ${newPoliticalSystemType}.`});
+    theModifiers.add(faction, 'political_recent_revolt');
+    faction.splitFactions([0.5*getRandomArbitrary(0.5, 1.5)], [newEthicalSystem]);
+
+  } else if(situation === 'collapse') {
+    // split 2-4 new factions
+    const newFactionsNumber = getRandomInt(2, 4);
+    const newFactionsSizes = []; // sizes in % of the original faction
+
+    for(let i=0; i<newFactionsNumber; i++) {
+      newFactionsSizes.push(getRandomArbitrary(0.1, 1 / (newFactionsNumber + 1)));
     }
-    const newPoliticalSystem = faction.getPoliticalSystem();
-    if(faction.politicalSystem !== newPoliticalSystem.system) {
-      faction.history.push({year: theTime.year, month: theTime.month, category: 'political_reform_' + theTime.year,  record: `To resolve recent political conflict the state polical system was reorganised into ${newPoliticalSystem.system} (${newPoliticalSystem.type}).`});
-      if(faction.politicalSystemType !== newPoliticalSystem.type) {
-        faction.name = newPoliticalSystem.name;
-        faction.history.push({year: theTime.year, month: theTime.month, category: 'faction_name_change_' + theTime.year,  record: `To reflect the new political system the nation changed its name to ${newPoliticalSystem.name}.`});
-      }
-      faction.politicalSystemType = newPoliticalSystem.type;
-      faction.politicalSystem = newPoliticalSystem.system;
-    }
+    const newFractionEthics = newFactionsSizes.map(() => {
+      const newFactionEthics = new Ethics();
+      newFactionEthics.ethics = Object.assign({}, faction.ethics);
+      newFactionEthics.driftRandom();
+      return newFactionEthics;
+    });
+
+    faction.splitFactions(newFactionsSizes, newFractionEthics);
+
+    theModifiers.add(faction, 'political_recent_collapse');
+    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_crisis_collapse_' + theTime.year,  record: `Political instability leads to a collapse of the nation.`});
+  } else {
+    debugger;
   }
 };

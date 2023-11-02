@@ -8,6 +8,7 @@ class Time {
     this.monthDuration = this.yearDuration / 12; //ms
 
     this.call1month = [];
+    this.call1years = [];
     this.call5years = [];
   }
 
@@ -18,6 +19,7 @@ class Time {
       this.month = 0;
       this.year++;
       this.node.dispatchEvent(new CustomEvent('year-passed', {detail: {year: this.year}}));
+      await Promise.all(this.call1years.map(fn => fn()));
       if(this.year !== 1975 && this.year % 5 === 0) {
         await Promise.all(this.call5years.map(fn => fn()));
       }
