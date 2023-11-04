@@ -72,7 +72,7 @@
     expandBtn.classList.add('system-info__expand-btn');
     planet.appendChild(expandBtn);
     expandBtn.addEventListener('click', () => planet.classList.toggle('system-info__list-item--open'));
-    planet.addEventListener('click', () => window['showPlanetInfo'](planetId));
+    planetLine.addEventListener('click', () => window['showPlanetInfo'](planetId));
     return planet;
   }
 

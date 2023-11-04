@@ -60,7 +60,8 @@
 .system-info__list-item--has-moons > .system-info__expand-btn {
   display: block;
   position: absolute;
-  top: 50%; right: 10px;
+  width: 30px; height: 30px;
+  top: 25px; right: 10px;
   color: white;
   background-color: transparent;
   border: 0;
