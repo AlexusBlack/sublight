@@ -47,3 +47,28 @@ integrationOrAnnexationEvent.actions_func = (faction) => {
   }
 };
 
+/* =========== ALLIES JOIN WAR =========== */
+// const alliesJoinWarEvent = new Event('diplomatic_allies_join_war', 'faction');
+// alliesJoinWarEvent.mean_months_to_happen = 0;
+// alliesJoinWarEvent.trigger_func = (faction) => {
+//   // get all war enemies of out allies
+//   let alliesEnemies = [...new Set(faction.diplomacy.alliance.reduce((enemies, allyId) => {
+//     const ally = theGalaxy.factions[allyId];
+//     return enemies.concat(ally.diplomacy.war);
+//   }, []))];
+//   // remove our own enemies
+//   alliesEnemies = alliesEnemies.filter(enemyId => !faction.diplomacy.war.includes(enemyId));
+//   // remove our allies
+//   alliesEnemies = alliesEnemies.filter(enemyId => !faction.diplomacy.alliance.includes(enemyId));
+//   if(alliesEnemies.length === 0) return false;
+//   faction._temp_alliesEnemies = alliesEnemies;
+//   return true;
+// };
+//
+// alliesJoinWarEvent.actions_func = (faction) => {
+//   faction._temp_alliesEnemies.forEach(enemyId => faction.declareWar(enemyId));
+// };
+
+
+
+

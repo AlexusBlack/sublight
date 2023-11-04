@@ -1,7 +1,8 @@
 class Events {
   constructor() {
     this.eventScopes = {
-      'faction': {}
+      'faction': {},
+      'planet': {},
     };
   }
 

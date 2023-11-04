@@ -187,4 +187,5 @@ const theGalaxy = new Galaxy();
   theEarth.cls.calculatePlanetaryTechLvl();
   theEarth.cls.calculateTechBleedThrough();
   theEarth.cls.recalculateFactionStrengths();
+  theEarth.cls.calculatePopulation();
 })();

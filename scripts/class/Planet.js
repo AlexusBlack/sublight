@@ -1,13 +1,21 @@
 class Planet {
   constructor(planetId) {
     this.planetId = planetId;
+    this.name = theGalaxy.planets[planetId].name;
     this.factions = [];
+    this.population = 0;
 
     // planetary tech level, maximum from every faction in category
     this.technology = { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 };
+
+    this.triggeredEvents = {};
+    this.modifiers = [];
+
   }
 
   process1Month() {
+    theModifiers.clean(this);
+    theEvents.tryTriggerEvents('planet', this);
     this.factions.forEach(faction => {
       theModifiers.clean(faction);
       theEvents.tryTriggerEvents('faction', faction);
@@ -24,7 +32,12 @@ class Planet {
     this.calculateTechBleedThrough();
     this.factions.forEach(f => f.calculate5Years());
 
+    this.calculatePopulation();
     this.calculateDiplomaticRelations();
+  }
+
+  calculatePopulation() {
+    this.population = this.factions.reduce((acc, f) => acc + f.population, 0);
   }
 
   calculateWarProgress() {
@@ -34,9 +47,12 @@ class Planet {
         faction.warExaustion = Math.max(0, faction.warExaustion - 0.1);
         return;
       }
+      // filter out dead factions
+      faction.diplomacy.war = faction.diplomacy.war.filter(warTargetId => !theGalaxy.factions[warTargetId].isDead);
       const militaryStrength = faction.calculateFullMilitaryStrength();
       faction.diplomacy.war.forEach(opponentId => {
         const opponent = theGalaxy.factions[opponentId];
+        if(opponent.isDead) return;
         const opponentMilitaryStrength = opponent.calculateFullMilitaryStrength();
 
         // War End checks
@@ -48,29 +64,48 @@ class Planet {
         } else {
           faction.wantsToEndWar = false;
         }
+        if(faction.wantsToEndWar && opponent.wantsToEndWar) {
+          faction.makePeace(opponentId);
+          console.log(`war: ${faction.name} and ${opponent.name} declare peace`);
+          return;
+        }
         if(faction.warExaustion >= 1) {
           faction.warExaustion = 1;
           // filter out factions from each other war list
-          faction.diplomacy.war = faction.diplomacy.war.filter(warTargetId => warTargetId !== opponentId);
-          opponent.diplomacy.war = opponent.diplomacy.war.filter(warTargetId => warTargetId !== faction.id);
-          // TODO: implement suppender conditions.
-          // TODO: if opponent is 'democratic', change government to 'democratic'
-          // TODO: if opponent is 'socialist', 50/50, change government to 'socialist' or get annexed
-          // TODO: if opponent is 'anarchy', change government to anarchy and collapse
-          // TODO: if opponent is 'dictatorship', get annexed
-          // TODO: if opponent is 'council', collapse and what's left get annexed
+          const victoryShare = 1/faction.diplomacy.war.length;
+          faction.makePeace(opponentId);
+          let targetFactionId = faction.id;
+          // if(victoryShare != 1) {
+          //   targetFactionId = faction.splitFactions([victoryShare])[0];
+          // }
+          const targetFaction = theGalaxy.factions[targetFactionId];
+          const newEthicalSystem = new Ethics();
+          newEthicalSystem.ethics = Object.assign({}, opponent.ethics);
+          // implement suppender conditions.
           console.log(`war: ${faction.name} surrenders to ${opponent.name}`);
+          if(opponent.politicalSystemType === 'democracy') {
+            // if opponent is 'democratic', change government to 'democratic'
+            targetFaction.changeEthicalSystem(newEthicalSystem);
+          } else if(opponent.politicalSystemType === 'socialist') {
+            // if opponent is 'socialist', 50/50, change government to 'socialist' or get annexed
+            if(Math.random() > 0.5) {
+              targetFaction.changeEthicalSystem(newEthicalSystem);
+            } else {
+              opponent.annexFaction(targetFaction);
+            }
+          } else if(opponent.politicalSystemType === 'anarchy') {
+            // if opponent is 'anarchy', change government to anarchy and collapse
+            targetFaction.changeEthicalSystem(newEthicalSystem);
+            targetFaction.collapse();
+          } else if(opponent.politicalSystemType === 'dictatorship') {
+            // if opponent is 'dictatorship', get annexed
+            opponent.annexFaction(targetFaction);
+          } else if(opponent.politicalSystemType === 'council') {
+            // if opponent is 'council', collapse and what's left get annexed
+            opponent.annexFaction(targetFaction);
+          }
           return;
         }
-        if(faction.wantsToEndWar && opponent.wantsToEndWar) {
-          faction.diplomacy.war = faction.diplomacy.war.filter(warTargetId => warTargetId !== opponentId);
-          opponent.diplomacy.war = opponent.diplomacy.war.filter(warTargetId => warTargetId !== faction.id);
-          console.log(`war: ${faction.name} and ${opponent.name} declare peace`);
-
-          return;
-        }
-
-
 
         // War exhaustion growth
         let exhaustionGain = (opponentMilitaryStrength / militaryStrength) * getRandomArbitrary(0.7, 1.3) * Utils.EGMult;
@@ -122,15 +157,14 @@ class Planet {
       if(faction.diplomacy.war.length > 0) return;
       if(validWarTargets[faction.id].length === 0) return;
       if(faction.warExaustion > 0.5) return;
-      // non-militaristic democracies don't declare wars
-      if(faction.politicalSystemType === 'democracy' && !faction.ethics['militarist'].active) return;
-      // pacifists don't declare wars
-      if(faction.ethics['pacifist'].active) return;
+      //// non-militaristic democracies don't declare wars
+      //// if(faction.politicalSystemType === 'democracy' && !faction.ethics['militarist'].active) return;
+      // only militarists declare wars
+      if(!faction.ethics['militarist'].active) return;
+      // TODO: MUTUAL ASSURED DESTRUCTION. Pops over 50,000 and tech over 300, means both paties can nuke each other to death, probably of war is 2% only
+
       // declare war on first war target
-      faction.diplomacy.war = [validWarTargets[faction.id][0]];
-      // war is force-mutual
-      theGalaxy.factions[validWarTargets[faction.id][0]].diplomacy.war.push(faction.id);
-      console.log(`${faction.name} declares war on ${theGalaxy.factions[faction.diplomacy.war[0]].name}`);
+      faction.declareWar(validWarTargets[faction.id][0]);
       // both sides are initially supported by their allies indirectly
       // their allies can join in directly though events
     });
@@ -279,11 +313,16 @@ class Planet {
   }
 
   isValidWarTarget(faction1Id, faction2Id) {
-    // can't be at war already
-    if(theGalaxy.factions[faction1Id].diplomacy.war.includes(faction2Id)) return false;
-    // faction 1 must threaten or rival faction 2
     const faction1 = theGalaxy.factions[faction1Id];
     const faction2 = theGalaxy.factions[faction2Id];
+
+    // can't be at war already
+    if(faction1.diplomacy.war.includes(faction2Id)) return false;
+
+    // if faction 2 at war with our ally they are a valid target
+    if(faction2.diplomacy.war.some(war => faction1.diplomacy.alliance.includes(war))) return true;
+
+    // faction 1 must threaten or rival faction 2
     if(!faction2.diplomacy.threatenedBy.includes(faction1.id) && !faction2.diplomacy.rivaledBy.includes(faction1.id)) return false;
     const faction1MilitaryStrength = faction1.calculateFullMilitaryStrength();
     const faction2MilitaryStrength = faction2.calculateFullMilitaryStrength();

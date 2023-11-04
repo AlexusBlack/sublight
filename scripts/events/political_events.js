@@ -231,22 +231,7 @@ politicalCrisisEvent.actions_func = function(faction) {
 
   } else if(situation === 'collapse') {
     // split 2-4 new factions
-    const newFactionsNumber = getRandomInt(2, 4);
-    const newFactionsSizes = []; // sizes in % of the original faction
-
-    for(let i=0; i<newFactionsNumber; i++) {
-      newFactionsSizes.push(getRandomArbitrary(0.1, 1 / (newFactionsNumber + 1)));
-    }
-    const newFractionEthics = newFactionsSizes.map(() => {
-      const newFactionEthics = new Ethics();
-      newFactionEthics.ethics = Object.assign({}, faction.ethics);
-      newFactionEthics.driftRandom();
-      return newFactionEthics;
-    });
-
-    faction.splitFactions(newFactionsSizes, newFractionEthics);
-
-    theModifiers.add(faction, 'political_recent_collapse');
+    faction.collapse();
     faction.history.push({year: theTime.year, month: theTime.month, category: 'political_crisis_collapse_' + theTime.year,  record: `Political instability leads to a collapse of the nation.`});
   } else {
     debugger;

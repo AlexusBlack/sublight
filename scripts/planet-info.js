@@ -1,10 +1,24 @@
+const geoTemperatures = ['50K', '70K', '100K', '120K', '150K', '170K', '190K', '220K', '250K', '280K', '310K', '340K', '375K', '425K', '500K', '600K', '750K', '900K', '1200K'];
+const geoValues = {
+  'type': ['Planet','Dwarf Planet','Moon','Moon','Moon','Moon'],
+  'composition': ['Rocky', 'Icy', 'Carbonaceous', 'Metallic', 'Ice Giant', 'Gas Giant'],
+  'primary atmospheric gas': ['No Atmosphere', 'Nitrogen', 'Oxygen', 'Carbon Dioxide'],
+  'oxygen': ['None', 'Present'],
+  'rings': ['None', 'Present'],
+  'geologically active': ['Inactive', 'Active'],
+  'base temperature': geoTemperatures,
+  'proper temperature': geoTemperatures,
+  'surface liquid': ['None', 'Water', 'Ammonia', 'Methanum', 'Nitrogen'],
+  'life': ['None', 'Unicellular', 'Multicellular'],
+};
+
 (function() {
   const el = document.querySelector('.planet-info__box');
   const titleEl = el.querySelector('.modal__title');
   const planetImage = el.querySelector('.planet-info__image');
   const geoAttributes = el.querySelector('.planet-info__geo-attributes');
 
-  const skipGeoKeys = ['id', 'in system id', 'parent star(s)', 'orbit index', 'parent body', 'moon index', 'belt length', 'visual style'];
+  const skipGeoKeys = ['id', 'in system id', 'parent star(s)', 'orbit index', 'parent body', 'moon index', 'belt length', 'visual style', 'cls'];
 
   window['showPlanetInfo'] = function(planetId) {
     el.classList.remove('modal--hidden');
@@ -17,12 +31,29 @@
     const planetImageHtml = Planet.getPlanetImage(planet);
     planetImage.innerHTML = planetImageHtml;
 
+    function formatGeoValue(key, value) {
+      if(['size', 'density', 'liquid coverage'].indexOf(key) !== -1) {
+        value = (value * 100) + '%';
+      } else if(key === 'atmosphere thickness' && value === -1) {
+        return null;
+      } else if(key === 'primary atmospheric gas' && value === -1) {
+        return null;
+      } else if(key === 'civilization') {
+        return 'cls' in theGalaxy.planets[planetId] ? 'Present' : 'None';
+      } else if(key in geoValues) {
+        value = geoValues[key][value];
+      }
+      return value;
+    }
+
     let geoAttributesHtml = '';
     let geoKeys = Object.keys(planet);
     geoKeys.forEach(key => {
       if(skipGeoKeys.indexOf(key) !== -1) return;
+      let value = formatGeoValue(key, planet[key]);
+      if(value === null) return;
       geoAttributesHtml += `
-        <li class="planet-info__field" data-name="${key}">${planet[key]}</li>
+        <li class="planet-info__field" data-name="${key}">${value}</li>
       `;
     });
     geoAttributes.innerHTML = geoAttributesHtml;

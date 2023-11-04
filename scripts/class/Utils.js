@@ -3,7 +3,7 @@ class Utils {
   static SSMult = 5; // science strength multiplier
   static SBTRate = 1/10; // science bleedthrough
   static SGMult = 1/100000; // science growth multiplier
-  static EGMult = 1; // war exhaustion gain multiplier
+  static EGMult = 0.1; // war exhaustion gain multiplier
 
   static arrayIntersect(a, b) {
     return a.filter((value) => b.includes(value));

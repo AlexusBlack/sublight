@@ -50,6 +50,7 @@ class Faction {
     this.growTerritory();
     this.growPopulation();
     this.growScience();
+    if(this.population === 0) this.kill();
   }
 
   calculate5Years() {
@@ -97,6 +98,28 @@ class Faction {
       faction.politicalSystemType = newPoliticalSystem.type;
       faction.politicalSystem = newPoliticalSystem.system;
     }
+  }
+
+  declareWar(targetFactionId) {
+    // can't declare war if already at way
+    if(this.diplomacy.war.indexOf(targetFactionId) !== -1) return;
+    this.diplomacy.war.push(targetFactionId);
+    // war is force-mutual
+    theGalaxy.factions[targetFactionId].diplomacy.war.push(this.id);
+    console.log(`${this.name} declares war on ${theGalaxy.factions[targetFactionId].name}`);
+  }
+
+  makePeace(opponentId) {
+    const faction = this;
+    const opponent = theGalaxy.factions[opponentId];
+    // remove from each other war list
+    faction.diplomacy.war = faction.diplomacy.war.filter(warTargetId => warTargetId !== opponentId);
+    opponent.diplomacy.war = opponent.diplomacy.war.filter(warTargetId => warTargetId !== faction.id);
+    // remove from threaten and threatenedBy lists
+    faction.diplomacy.threatens = faction.diplomacy.threatens.filter(warTargetId => warTargetId !== opponentId);
+    faction.diplomacy.threatenedBy = faction.diplomacy.threatenedBy.filter(warTargetId => warTargetId !== opponentId);
+    opponent.diplomacy.threatens = opponent.diplomacy.threatens.filter(warTargetId => warTargetId !== this.id);
+    opponent.diplomacy.threatenedBy = opponent.diplomacy.threatenedBy.filter(warTargetId => warTargetId !== this.id);
   }
 
   annexFaction(faction, gently=false) { // gently if integration
@@ -147,6 +170,8 @@ class Faction {
     const partNames = [...this.partNames];
     const partNamesAdjectives = [...this.partNamesAdjectives];
 
+    const newFactionIds = [];
+
     parts.forEach((part, index) => {
       let newEthics = new Ethics();
       if(ethics[index] === undefined) {
@@ -162,12 +187,15 @@ class Faction {
       if(newFaction.baseNamesAdjectives[0] === undefined) debugger;
       newFaction.partNames = [newFaction.baseNames[0]];
       newFaction.partNamesAdjectives = [newFaction.baseNamesAdjectives[0]];
+
       const newPoliticalSystem = newFaction.getPoliticalSystem();
       newFaction.name = newPoliticalSystem.name;
       newFaction.politicalSystemType = newPoliticalSystem.type;
       newFaction.politicalSystem = newPoliticalSystem.system;
+
       this.planet.cls.factions.push(newFaction);
       newFaction.history.push({year: theTime.year, month: theTime.month, category: 'political_faction_revolted_' + theTime.year,  record: `The nation declared independence from ${this.name}, it will go it's own way now. Citizens of the new nation look into their future with optimism.`});
+      newFactionIds.push(newFaction.id);
     });
     if(leftOver > 0.01) {
       this.population *= leftOver;
@@ -175,6 +203,27 @@ class Faction {
     } else {
       this.kill();
     }
+    return newFactionIds;
+  }
+
+  collapse() {
+    const faction = this;
+    const newFactionsNumber = getRandomInt(2, 4);
+    const newFactionsSizes = []; // sizes in % of the original faction
+
+    for(let i=0; i<newFactionsNumber; i++) {
+      newFactionsSizes.push(getRandomArbitrary(0.1, 1 / (newFactionsNumber + 1)));
+    }
+    const newFractionEthics = newFactionsSizes.map(() => {
+      const newFactionEthics = new Ethics();
+      newFactionEthics.ethics = Object.assign({}, faction.ethics);
+      newFactionEthics.driftRandom();
+      return newFactionEthics;
+    });
+
+    faction.splitFactions(newFactionsSizes, newFractionEthics);
+
+    theModifiers.add(faction, 'political_recent_collapse');
   }
 
   getEconomicalSystem() {
@@ -471,6 +520,7 @@ class Faction {
     const currentPopulationDensity = this.population / this.territory;
     //console.log(`Current Population Density: ${currentPopulationDensity}`);
     baseGrowth = theModifiers.apply(this.modifiers, 'faction_population_growth', baseGrowth);
+    baseGrowth = theModifiers.apply(this.planet.cls.modifiers, 'faction_population_growth', baseGrowth);
 
     // TODO: factor in how suitable the planet is for life
 
