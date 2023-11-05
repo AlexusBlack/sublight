@@ -17,6 +17,7 @@ const geoValues = {
   const titleEl = el.querySelector('.modal__title');
   const planetImage = el.querySelector('.planet-info__image');
   const geoAttributes = el.querySelector('.planet-info__geo-attributes');
+  const historyTab = el.querySelector('.planet-info__history-tab');
 
   const skipGeoKeys = ['id', 'in system id', 'parent star(s)', 'orbit index', 'parent body', 'moon index', 'belt length', 'visual style', 'cls'];
 
@@ -28,20 +29,24 @@ const geoValues = {
     const planet = theGalaxy.planets[planetId];
     titleEl.textContent = 'Planet: ' + planet['name'];
 
+    historyTab.innerHTML = History.render(planet.cls.history);
+
     const planetImageHtml = Planet.getPlanetImage(planet);
     planetImage.innerHTML = planetImageHtml;
 
     function formatGeoValue(key, value) {
-      if(['size', 'density', 'liquid coverage'].indexOf(key) !== -1) {
+      if(['size', 'density'].indexOf(key) !== -1) {
+        value = (value * 100).toFixed(2) + '% of Earth';
+      } else if(key === 'liquid coverage') {
         value = (value * 100) + '%';
       } else if(key === 'atmosphere thickness' && value === -1) {
         return null;
       } else if(key === 'primary atmospheric gas' && value === -1) {
         return null;
       } else if(key === 'civilization') {
-        return 'cls' in theGalaxy.planets[planetId] ? 'Present' : 'None';
+        return 'cls' in planet ? (planet.cls.extinct ? 'Extinct': 'Present') : 'None';
       } else if(key in geoValues) {
-        value = geoValues[key][value];
+        value = geoValues[key][value] !== undefined ? geoValues[key][value] : value;
       }
       return value;
     }
@@ -149,7 +154,14 @@ const geoValues = {
 
       const canvas = document.createElement('canvas');
       chartBox.appendChild(canvas);
-      new Chart(canvas, config);
+      const factionsChart = new Chart(canvas, config);
+      function canvasFactionClickHandler(e, chart) {
+        const activePoints = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+        if(activePoints.length === 0) return;
+        const factionId = factions[activePoints[0].index].id;
+        showFactionInfo(factionId);
+      };
+      canvas.addEventListener('click', e => canvasFactionClickHandler(e, factionsChart));
 
       const dataDiplomacy = {
         labels: labels,
@@ -276,7 +288,8 @@ const geoValues = {
 
       const canvasDiplomacy = document.createElement('canvas');
       chartBox.appendChild(canvasDiplomacy);
-      new Chart(canvasDiplomacy, configDiplomacy);
+      const diplomacyChart = new Chart(canvasDiplomacy, configDiplomacy);
+      canvasDiplomacy.addEventListener('click', e => canvasFactionClickHandler(e, diplomacyChart));
 
     } else {
       el.querySelector('.planet-info__geo-tab-btn').click();

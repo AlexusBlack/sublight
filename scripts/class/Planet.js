@@ -4,6 +4,9 @@ class Planet {
     this.name = theGalaxy.planets[planetId].name;
     this.factions = [];
     this.population = 0;
+    this.extinct = false;
+
+    this.history = [];
 
     // planetary tech level, maximum from every faction in category
     this.technology = { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 };
@@ -38,6 +41,10 @@ class Planet {
 
   calculatePopulation() {
     this.population = this.factions.reduce((acc, f) => acc + f.population, 0);
+    if(this.population === 0 && !this.extinct) {
+      History.add([this], `Civilisation on ${this.name} completely died out.`)
+    }
+    this.extinct = this.population === 0;
   }
 
   calculateWarProgress() {
@@ -66,6 +73,7 @@ class Planet {
         }
         if(faction.wantsToEndWar && opponent.wantsToEndWar) {
           faction.makePeace(opponentId);
+          History.add([faction, opponent, faction.planet.cls], `PEACE! ${faction.name} and ${opponent.name} declare peace.`);
           console.log(`war: ${faction.name} and ${opponent.name} declare peace`);
           return;
         }
@@ -83,11 +91,17 @@ class Planet {
           newEthicalSystem.ethics = Object.assign({}, opponent.ethics);
           // implement suppender conditions.
           console.log(`war: ${faction.name} surrenders to ${opponent.name}`);
+          History.add([faction, opponent, faction.planet.cls], `SURRENDER! ${faction.name} surrenders to ${opponent.name}.`);
+          // if revolutionaries lost, annex them back
+          if(faction.revolvedFrom === opponent.id) {
+            opponent.annexFaction(targetFaction);
+            return;
+          }
           if(opponent.politicalSystemType === 'democracy') {
             // if opponent is 'democratic', change government to 'democratic'
             targetFaction.changeEthicalSystem(newEthicalSystem);
-          } else if(opponent.politicalSystemType === 'socialist') {
-            // if opponent is 'socialist', 50/50, change government to 'socialist' or get annexed
+          } else if(opponent.politicalSystemType === 'socialism') {
+            // if opponent is 'socialism', 50/50, change government to 'socialist' or get annexed
             if(Math.random() > 0.5) {
               targetFaction.changeEthicalSystem(newEthicalSystem);
             } else {

@@ -55,8 +55,19 @@ cultureCycleEvent.actions_func = function(faction) {
     };
   }
 
-  const modifier = weightedRandom(cultureCycleModifierKeys, Object.values(cultureCycleChances)).item;
-  faction.history.push({'year': theTime.year, 'month': theTime.month, category: 'culture_cycle', 'record': cultureCycleEvent_descriptions[modifier]});
+  if(theModifiers.has(faction.planet.cls, 'relativistic_projectile_hit')) {
+    cultureCycleChances = {
+      'culture_cycle_boom': 0,
+      'culture_cycle_growth': 0,
+      'culture_cycle_stagnation': 0,
+      'culture_cycle_decline': 0.3,
+      'culture_cycle_depression': 0.7
+    };
+  }
+
+  //const modifier = weightedRandom(cultureCycleModifierKeys, Object.values(cultureCycleChances)).item;
+  const modifier = weightedRand2(cultureCycleChances);
+  History.add([faction], cultureCycleEvent_descriptions[modifier], 'culture_cycle');
   theModifiers.add(faction, modifier);
 };
 

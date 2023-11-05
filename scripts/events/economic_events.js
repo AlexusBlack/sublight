@@ -55,8 +55,20 @@ economicCycleEvent.actions_func = function(faction) {
     };
   }
 
-  const modifier = weightedRandom(economicCycleModifierKeys, Object.values(economicCycleChances)).item;
-  faction.history.push({'year': theTime.year, 'month': theTime.month, category: 'economic_cycle', record: economicCycleEvent_descriptions[modifier]});
+  if(theModifiers.has(faction.planet.cls, 'relativistic_projectile_hit')) {
+    // relativistic projectile hit
+    economicCycleChances = {
+      'economic_cycle_boom': 0.0,
+      'economic_cycle_growth': 0.0,
+      'economic_cycle_stagnation': 0.0,
+      'economic_cycle_recession': 0.0,
+      'economic_cycle_depression': 1.0
+    };
+  }
+
+  //const modifier = weightedRandom(economicCycleModifierKeys, Object.values(economicCycleChances)).item;
+  const modifier = weightedRand2(economicCycleChances);
+  History.add([faction], economicCycleEvent_descriptions[modifier], 'economic_cycle');
   theModifiers.add(faction, modifier);
 };
 

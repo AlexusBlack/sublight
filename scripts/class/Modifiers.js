@@ -28,6 +28,8 @@ class Modifiers {
           variableValue += effect.value;
         } else if(effect.type === variableKey + '_mult') {
           variableValue *= effect.value;
+        } else if(effect.type === variableKey + '_set') {
+          variableValue = effect.value;
         }
       });
     });

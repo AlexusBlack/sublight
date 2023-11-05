@@ -11,6 +11,7 @@ class Ethics {
     'communal': 'individual',
     'individual': 'communal'
   };
+
   constructor() {
 
     this.ethics = {};
@@ -18,6 +19,19 @@ class Ethics {
     for (let key in Ethics.ethics_and_opposites) {
       this.ethics[key] = {active: false, extreme: false};
     }
+  }
+
+  getEthics() {
+    const ethics = [];
+    Object.keys(this.ethics).forEach(key => {
+      const ethic = this.ethics[key];
+      if (ethic.active && ethic.extreme) {
+        ethics.push('extreme ' + key);
+      } else if (ethic.active) {
+        ethics.push(key);
+      }
+    });
+    return ethics;
   }
 
   calculateValue() {

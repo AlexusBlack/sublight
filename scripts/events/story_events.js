@@ -15,4 +15,5 @@ relativisticHitEvent.trigger_func = (planet) => {
 
 relativisticHitEvent.actions_func = (planet) => {
   theModifiers.add(planet, 'relativistic_projectile_hit');
+  History.add([planet], `${planet.name} was hit by a relativistic projectile. Vulcans errupt, earth quakes are common place, most complex life forms are dying out. Scientists estimate that concequences of the hit will last for another 300-500 years. ${planet.name} civilisation is on the brink of extinsion.`, 'relativistic_hit');
 };

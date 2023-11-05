@@ -87,8 +87,19 @@ politicalCycleEvent.actions_func = function(faction) {
     politicalCycleChances['political_cycle_crisis'] = Math.max(politicalCycleChances['political_cycle_crisis'] - 0.1, 0);
   }
 
+  if(theModifiers.has(faction.planet.cls, 'relativistic_projectile_hit')) {
+    politicalCycleChances = {
+      'political_cycle_unity': 0.1,
+      'political_cycle_consensus': 0.1,
+      'political_cycle_stagnation': 0,
+      'political_cycle_conflict': 0.3,
+      'political_cycle_crisis': 0.5
+    };
+  }
+
   const modifier = weightedRandom(politicalCycleModifierKeys, Object.values(politicalCycleChances)).item;
-  faction.history.push({year: theTime.year, month: theTime.month, category: 'political_cycle',  record: politicalCycleEvent_descriptions[modifier]});
+  //const modifier = weightedRand2(politicalCycleChances);
+  History.add([faction],  politicalCycleEvent_descriptions[modifier], 'political_cycle');
   theModifiers.add(faction, modifier);
 };
 
@@ -136,12 +147,12 @@ politicalConflictEvent.actions_func = function(faction) {
 
   if(situation === 'small_revolt') {
     //console.log(`Small revolt in <${faction.name}>`, newEthicalSystem);
-    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_conflict_revolt_' + theTime.year,  record: `Political instability leads to a small revolt with demand for nation to become more ${ethicChange}.`});
+    History.add([faction],  `Political instability leads to a small revolt with demand for nation to become more ${ethicChange}.`, 'political_conflict_revolt_' + theTime.year);
     theModifiers.add(faction, 'political_recent_revolt');
     faction.splitFactions([0.1*getRandomArbitrary(0.5, 1.5)], [newEthicalSystem]);
   } else {
     faction.changeEthicalSystem(newEthicalSystem);
-    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_conflict_reform_' + theTime.year,  record: `Political instability leads to a political reform that makes nation more ${ethicChange}.` + (otherEthicChange !== '' ? ` As a side effect the nation became ${otherEthicChange}.` : '')});
+    History.add([faction], `Political instability leads to a political reform that makes nation more ${ethicChange}.` + (otherEthicChange !== '' ? ` As a side effect the nation became ${otherEthicChange}.` : ''), 'political_conflict_reform_' + theTime.year);
   }
 };
 
@@ -225,14 +236,17 @@ politicalCrisisEvent.actions_func = function(faction) {
     theModifiers.add(faction, 'political_recent_coup');
 
   } else if(situation === 'revolution') {
-    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_crisis_revolution_' + theTime.year,  record: `Political instability leads to a revolution with demand for nation to become ${newPoliticalSystemType}.`});
     theModifiers.add(faction, 'political_recent_revolt');
-    faction.splitFactions([0.5*getRandomArbitrary(0.5, 1.5)], [newEthicalSystem]);
+    const revoltedFactionId = faction.splitFactions([0.5*getRandomArbitrary(0.5, 1.5)], [newEthicalSystem])[0];
+    const revoltedFaction = theGalaxy.factions[revoltedFactionId];
+    History.add([faction, faction.planet.cls],  `Political instability leads to a revolution in ${faction.name} with demand for the nation to become ${newPoliticalSystemType}. Revolutionaries call themselves ${revoltedFaction.name}.`);
+    revoltedFaction.revolvedFrom = faction.id;
+    revoltedFaction.declareWar(faction.id);
 
   } else if(situation === 'collapse') {
     // split 2-4 new factions
     faction.collapse();
-    faction.history.push({year: theTime.year, month: theTime.month, category: 'political_crisis_collapse_' + theTime.year,  record: `Political instability leads to a collapse of the nation.`});
+    History.add([faction, faction.planet.cls], `Political instability leads to the collapse of ${faction.name}.`, 'political_crisis_collapse_' + theTime.year);
   } else {
     debugger;
   }

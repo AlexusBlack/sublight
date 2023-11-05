@@ -34,6 +34,7 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/starmap-info.php') ?>
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/system-info.php') ?>
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/planet-info.php') ?>
+<?php include($_SERVER['DOCUMENT_ROOT'] . '/parts/faction-info.php') ?>
 
 <script src="/vendor/chart.min.js"></script>
 <script src="/vendor/random.js"></script>
@@ -42,6 +43,7 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <script src="/scripts/class/Utils.js"></script>
 <script src="/scripts/class/Ethics.js"></script>
 <script src="/scripts/class/Time.js"></script>
+<script src="/scripts/class/History.js"></script>
 
 <script src="/scripts/class/Events.js"></script>
 <script src="/scripts/events/economic_events.js"></script>
@@ -68,3 +70,4 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <script src="/scripts/resources.js"></script>
 <script src="/scripts/system-info.js"></script>
 <script src="/scripts/planet-info.js"></script>
+<script src="/scripts/faction-info.js"></script>
