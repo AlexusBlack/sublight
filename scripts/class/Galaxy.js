@@ -49,7 +49,7 @@ const theGalaxy = new Galaxy();
     'formal': 100, 'natural': 100, 'social': 100, 'applied': 100
   }, {
     'alliance': [4, 6], 'rival': [1], 'rivaledBy': [1], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'mixed');
   usaFaction.baseNames = ['USA', 'United States', 'America', 'US', 'North America'];
   usaFaction.baseNamesAdjectives = ['American', 'US', 'North American'];
   usaFaction.partNames = ['America', 'North America', 'Texas', 'California', 'New York', 'Florida', 'Washington', 'Oregon', 'Alaska', 'Hawaii', 'Arizona', 'Nevada', 'Colorado', 'Utah', 'New Mexico', 'Idaho', 'Montana', 'Wyoming', 'North Dakota', 'South Dakota', 'Nebraska', 'Kansas', 'Oklahoma', 'Minnesota', 'Iowa', 'Missouri', 'Arkansas', 'Louisiana', 'Wisconsin', 'Illinois', 'Michigan', 'Indiana', 'Ohio', 'Kentucky', 'Tennessee', 'Mississippi', 'Alabama', 'Georgia', 'South Carolina', 'North Carolina', 'Virginia', 'West Virginia', 'Maryland', 'Delaware', 'Pennsylvania', 'New Jersey', 'Connecticut', 'Rhode Island', 'Massachusetts', 'Vermont', 'New Hampshire', 'Maine', 'Britain', 'England', 'Australia'];
@@ -65,7 +65,7 @@ const theGalaxy = new Galaxy();
     'formal': 80, 'natural': 80, 'social': 80, 'applied': 80
   }, {
     'alliance': [], 'rival': [0], 'rivaledBy': [0], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'industrial');
   ussrFaction.baseNames = ['Soviet Union', 'Russia', 'Soviet', 'Slavs'];
   ussrFaction.baseNamesAdjectives = ['Soviet', 'Russian', 'Slavic'];
   ussrFaction.partNames = ['Russia', 'Siberia', 'Far East', 'Ural', 'Volga', 'Caucasus', 'Central Asia', 'Northwest', 'Central', 'South', 'North', 'Far North', 'Far East', 'Karelia', 'Kola', 'Kamchatka', 'Sakhalin', 'Amur', 'Khabarovsk', 'Chukotka', 'Yakutia', 'Buryatia', 'Tuva', 'Altai', 'Khakassia', 'Krasnoyarsk', 'Irkutsk', 'Novosibirsk', 'Tomsk', 'Omsk', 'Altai', 'Kemerovo', 'Tyumen', 'Sverdlovsk', 'Chelyabinsk', 'Bashkortostan', 'Tatarstan', 'Mari El', 'Mordovia', 'Udmurtia', 'Perm', 'Komi', 'Arkhangelsk', 'Nenets', 'Komi-Permyak', 'Karelia', 'Vologda', 'Kirov', 'Nizhny Novgorod', 'Penza', 'Samara', 'Orenburg', 'Saratov', 'Volgograd', 'Astrakhan', 'Kalmykia', 'Dagestan', 'Chechnya', 'Ingushetia', 'Kabardino-Balkaria', 'North Ossetia', 'Karachay-Cherkessia', 'Adygea', 'Stavropol', 'Kaliningrad', 'Leningrad', 'Pskov', 'Novgorod', 'Tver', 'Moscow', 'Ryazan', 'Tula', 'Lipetsk', 'Tambov', 'Voronezh', 'Belgorod', 'Kursk', 'Bryansk', 'Kaluga', 'Smolensk', 'Oryol', 'Kostroma', 'Ivanovo', 'Yaroslavl', 'Vladimir', 'Nizhny Novgorod', 'Kirov', 'Ulyanovsk', 'Penza', 'Saratov', 'Samara', 'Orenburg', 'Bashkortostan'];
@@ -81,7 +81,7 @@ const theGalaxy = new Galaxy();
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
     'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'industrial');
   chinaFaction.baseNames = ['China', 'Han', 'Zhongguo'];
   chinaFaction.baseNamesAdjectives = ['Chinese', 'Han'];
   chinaFaction.partNames = ['China', 'Beijing', 'Tianjin', 'Hebei', 'Shanxi', 'Inner Mongolia', 'Liaoning', 'Jilin', 'Heilongjiang', 'Shanghai', 'Jiangsu', 'Zhejiang', 'Anhui', 'Fujian', 'Jiangxi', 'Shandong', 'Henan', 'Hubei', 'Hunan', 'Guangdong', 'Guangxi', 'Hainan', 'Chongqing', 'Sichuan', 'Guizhou', 'Yunnan', 'Tibet', 'Shaanxi', 'Gansu', 'Qinghai', 'Ningxia', 'Xinjiang'];
@@ -97,7 +97,7 @@ const theGalaxy = new Galaxy();
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
     'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'agricultural');
   indiaFaction.baseNames = ['India', 'Hindustan', 'Bharat', 'Hindu'];
   indiaFaction.baseNamesAdjectives = ['Indian', 'Hindu', 'Bharati'];
   indiaFaction.partNames = ['India', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh'];
@@ -113,7 +113,7 @@ const theGalaxy = new Galaxy();
     'formal': 20, 'natural': 20, 'social': 20, 'applied': 20
   }, {
     'alliance': [0], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'mixed');
   eecFaction.baseNames = ['European Community', 'European Union', 'Europe', 'France', 'Germany', 'Spain'];
   eecFaction.baseNamesAdjectives = ['European', 'French', 'German', 'Spanish'];
   eecFaction.partNames = ['Europe', 'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland', 'Greece', 'Hungary', 'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania', 'Slovakia', 'Slovenia', 'Sweden', 'France', 'Germany', 'Spain'];
@@ -129,7 +129,7 @@ const theGalaxy = new Galaxy();
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
     'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'agricultural');
   arabFaction.baseNames = ['Arab Nations', 'Arab League', 'Arab', 'North Africa'];
   arabFaction.baseNamesAdjectives = ['Arab', 'North African', 'Arabic'];
   arabFaction.partNames = ['Algeria', 'Bahrain', 'Comoros', 'Djibouti', 'Egypt', 'Iraq', 'Jordan', 'Kuwait', 'Lebanon', 'Libya', 'Mauritania', 'Morocco', 'Oman'];
@@ -145,7 +145,7 @@ const theGalaxy = new Galaxy();
     'formal': 95, 'natural': 95, 'social': 95, 'applied': 95
   }, {
     'alliance': [0], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'industrial');
   japanFaction.baseNames = ['Japan', 'Nippon', 'Nihon'];
   japanFaction.baseNamesAdjectives = ['Japanese', 'Nipponese', 'Nihonese'];
   japanFaction.partNames = ['Japan', 'Hokkaido', 'Honshu', 'Shikoku', 'Kyushu'];
@@ -161,7 +161,7 @@ const theGalaxy = new Galaxy();
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
     'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'agricultural');
   southAmericaFaction.baseNames = ['South America', 'Latin America', 'Brazil', 'Argentina'];
   southAmericaFaction.baseNamesAdjectives = ['South American', 'Latin American', 'Brazilian', 'Argentinian'];
   southAmericaFaction.partNames = ['South America', 'Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'Guyana', 'Paraguay', 'Peru', 'Suriname', 'Uruguay', 'Venezuela'];
@@ -177,7 +177,7 @@ const theGalaxy = new Galaxy();
     'formal': 0, 'natural': 0, 'social': 0, 'applied': 0
   }, {
     'alliance': [], 'rival': [], 'rivaledBy': [], 'war': [], 'protects': [], 'protectedBy': [], 'threatens': [], 'threatenedBy': []
-  });
+  }, 'agricultural');
   africaFaction.baseNames = ['Africa', 'South Africa', 'Turkey', 'Egypt', 'Ethiopia', 'Nigeria'];
   africaFaction.baseNamesAdjectives = ['African', 'South African', 'Turkish', 'Egyptian', 'Ethiopian', 'Nigerian'];
   africaFaction.partNames = ['Africa', 'South Africa', 'Turkey', 'Algeria', 'Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burundi', 'Cameroon', 'Cape Verde', 'Central African Republic', 'Chad', 'Comoros', 'Democratic Republic of the Congo', 'Republic of the Congo', 'Djibouti', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Ethiopia', 'Gabon', 'Gambia', 'Ghana', 'Guinea', 'Guinea-Bissau', 'Ivory Coast', 'Kenya', 'Lesotho', 'Liberia', 'Libya', 'Madagascar', 'Malawi', 'Mali', 'Mauritania', 'Mauritius', 'Morocco', 'Mozambique', 'Namibia', 'Niger', 'Nigeria', 'Rwanda', 'Sao Tome and Principe', 'Senegal', 'Seychelles', 'Sierra Leone', 'Somalia', 'South Africa', 'South Sudan', 'Sudan', 'Swaziland', 'Tanzania', 'Togo', 'Tunisia', 'Uganda', 'Zambia', 'Zimbabwe'];

@@ -34,6 +34,18 @@ class Ethics {
     return ethics;
   }
 
+  static valuate(faction, ethic, active, extreme, none=1) {
+    if(faction.ethics[ethic].active) {
+      if(faction.ethics[ethic].extreme) {
+        return extreme;
+      } else {
+        return active;
+      }
+    } else {
+      return none;
+    }
+  }
+
   calculateValue() {
     // every active +1, every extreme +2
     let value = 0;

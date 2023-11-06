@@ -1,7 +1,7 @@
 class Faction {
   static factionCounter = 0;
 
-  constructor(planetId, name, population, territory, ethics, technology, diplomacy) {
+  constructor(planetId, name, population, territory, ethics, technology, diplomacy, production) {
     this.id = Faction.factionCounter++;
     theGalaxy.factions[this.id] = this;
     this.isDead = false;
@@ -14,6 +14,7 @@ class Faction {
     this.ethics = ethics.ethics;
     this.technology = technology; // { 'formal': 0, 'natural': 0, 'social': 0, 'applied': 0 }
     this.diplomacy = diplomacy;
+    this.production = production;
     this.baseNames = [];
     this.baseNamesAdjectives = [];
     this.partNames = [];
@@ -28,6 +29,7 @@ class Faction {
     this.scienceStrength = 0;
     this.cultureStrength = 0;
     this.militaryStrength = 0;
+    this.economyStrength = 0;
 
     this.populationGroups = this.calculatePopulationGroups();
     this.calculateStrength();
@@ -694,22 +696,22 @@ class Faction {
       1,    1,   0.02,   1.2,  // direct
       2,    2,   0.2,    2    // epoch
     );
-    let generalStrength = this.calculateGroupStrength(this.populationGroups['general'],
+    this.economyStrength = this.calculateGroupStrength(this.populationGroups['general'],
     //formal, natural, social, applied
       0.5,   0.5,   0.5,    0.5,  // direct
       0.5,   0.5,   0.5,    0.5   // epoch
     );
 
     if(this.economicalSystem === 'monopolised') {
-      generalStrength *= 0.80;
+      this.economyStrength *= 0.80;
     } else if(this.economicalSystem === 'planned') {
-      generalStrength *= 0.70;
+      this.economyStrength *= 0.70;
     }
 
-    generalStrength = theModifiers.apply(this.modifiers, 'faction_general_strength', generalStrength);
+    this.economyStrength = theModifiers.apply(this.modifiers, 'faction_general_strength', this.economyStrength);
 
     // sum up the strength of each group
-    this.strength = this.scienceStrength + this.cultureStrength + this.militaryStrength + generalStrength;
+    this.strength = this.scienceStrength + this.cultureStrength + this.militaryStrength + this.economyStrength;
   }
   // ---
 }

@@ -3,6 +3,7 @@ class Planet {
     this.planetId = planetId;
     this.name = theGalaxy.planets[planetId].name;
     this.factions = [];
+    this.market = new Market(planetId);
     this.population = 0;
     this.extinct = false;
 
@@ -27,6 +28,7 @@ class Planet {
 
   process1Years() {
     this.calculateWarProgress();
+    this.market.process1Years();
   }
 
   process5Years() {

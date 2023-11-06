@@ -63,6 +63,7 @@ $systems = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/systems.j
 <script src="/scripts/class/Faction.js"></script>
 <script src="/scripts/class/Planet.js"></script>
 <script src="/scripts/class/Galaxy.js"></script>
+<script src="/scripts/class/Market.js"></script>
 <script src="/scripts/modal.js"></script>
 <script src="/scripts/tabs.js"></script>
 <script src="/scripts/starmap.js"></script>
